@@ -19,10 +19,13 @@ App({
           traceUser: true
         });
         console.log('云开发初始化成功');
+        
+        // 简化登录流程 - 只获取 OpenID
         this.getUserOpenId();
       } catch (err) {
         console.log('云开发暂未开通，使用Demo模式');
         this.globalData.demoMode = true;
+        this.globalData.openid = 'demo_' + Date.now();
       }
     } else {
       console.log('Demo模式：使用本地数据');
@@ -30,11 +33,27 @@ App({
       this.globalData.openid = 'demo_' + Date.now();
     }
     
+    // 尝试从本地恢复用户信息
+    this.restoreUserInfo();
+    
     // 初始化购物车数量
     this.updateCartCount();
   },
 
-  // 获取用户OpenID
+  // 恢复用户信息
+  restoreUserInfo() {
+    try {
+      const userInfo = wx.getStorageSync('userInfo');
+      if (userInfo) {
+        this.globalData.userInfo = userInfo;
+        console.log('已恢复用户信息:', userInfo.nickName);
+      }
+    } catch (err) {
+      console.error('恢复用户信息失败:', err);
+    }
+  },
+
+  // 获取用户OpenID (保留兼容性)
   getUserOpenId() {
     if (this.globalData.demoMode) {
       this.globalData.openid = 'demo_' + Date.now();

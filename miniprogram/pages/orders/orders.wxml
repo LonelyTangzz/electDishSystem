@@ -45,7 +45,11 @@
               <text class="item-name">{{dish.dish.name}}</text>
               <text class="item-quantity">x{{dish.quantity}}</text>
             </view>
-            <text class="item-price">¥{{dish.itemTotal}}</text>
+            <view class="item-stars">
+              <block wx:for="{{dish.totalStars}}" wx:for-item="star" wx:key="*this">
+                <text class="star-icon">❤️</text>
+              </block>
+            </view>
           </view>
         </view>
 
@@ -53,7 +57,11 @@
         <view class="order-footer">
           <view class="order-total">
             <text class="total-label">总计：</text>
-            <text class="total-price">¥{{item.formattedTotal}}</text>
+            <view class="total-stars">
+              <block wx:for="{{item.totalStars}}" wx:for-item="star" wx:key="*this">
+                <text class="star-icon">❤️</text>
+              </block>
+            </view>
           </view>
           
           <view class="order-actions">

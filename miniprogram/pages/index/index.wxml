@@ -1,4 +1,6 @@
 <!--pages/index/index.wxml-->
+<wxs module="tools" src="./index.wxs"></wxs>
+
 <view class="container">
   <!-- 搜索栏 -->
   <view class="search-bar">
@@ -49,7 +51,9 @@
           <text class="dish-sold">已售 {{item.soldCount}} 份</text>
         </view>
         <view class="dish-price-actions">
-          <text class="dish-price">¥{{item.price}}</text>
+          <view class="dish-stars">
+            <text class="stars-text">{{tools.getStarsText(item.stars)}}</text>
+          </view>
           <view class="quantity-control">
             <block wx:if="{{getDishQuantity(item.id) > 0}}">
               <view class="control-btn" data-id="{{item.id}}" bindtap="onDecrease">－</view>

@@ -25,16 +25,33 @@ Page({
 
   // 加载购物车数据
   loadCartData() {
-    const cartItems = cartManager.getCartItems().map(item => ({
-      ...item,
-      itemTotal: (item.dish.price * item.quantity).toFixed(2)
-    }));
+    const dishData = require('../../utils/dishData.js');
+    
+    const cartItems = cartManager.getCartItems().map(item => {
+      // 从最新的菜品数据中获取stars字段
+      const latestDish = dishData.getDishById(item.dish.id || item.dish._id);
+      const stars = latestDish ? latestDish.stars : (item.dish.stars || 0);
+      
+      return {
+        ...item,
+        dish: {
+          ...item.dish,
+          stars: stars  // 更新stars字段
+        },
+        itemTotal: (item.dish.price * item.quantity).toFixed(2),
+        totalStars: stars * item.quantity  // 计算总爱心数
+      };
+    });
     const totalPrice = cartManager.getTotalPrice();
     const isEmpty = cartManager.isEmpty();
+    
+    // 计算总爱心数
+    const totalStars = cartItems.reduce((sum, item) => sum + item.totalStars, 0);
 
     console.log('购物车数据:', {
       商品数量: cartItems.length,
       总价: totalPrice,
+      总爱心数: totalStars,
       是否为空: isEmpty
     });
 
@@ -42,6 +59,7 @@ Page({
       cartItems: cartItems,
       totalPrice: totalPrice,
       formattedTotalPrice: totalPrice.toFixed(2),
+      totalStars: totalStars,  // 总爱心数
       isEmpty: isEmpty
     });
   },

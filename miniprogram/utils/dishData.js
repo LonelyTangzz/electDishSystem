@@ -10,12 +10,13 @@ const categories = [
 ];
 
 const dishes = [
-  // 热菜
+  // 热菜 - 荤菜 3-5颗爱心
   {
     id: '1',
     name: '宫保鸡丁',
     description: '经典川菜，鸡肉鲜嫩，花生酥脆，麻辣鲜香',
     price: 38.0,
+    stars: 4, // 荤菜：4颗爱心
     emoji: '🍗',
     category: 'hot',
     categoryName: '热菜',
@@ -28,6 +29,7 @@ const dishes = [
     name: '鱼香肉丝',
     description: '酸甜可口，色泽红润，肉丝嫩滑',
     price: 32.0,
+    stars: 3, // 荤菜：3颗爱心
     emoji: '🥩',
     category: 'hot',
     categoryName: '热菜',
@@ -40,6 +42,7 @@ const dishes = [
     name: '麻婆豆腐',
     description: '麻辣鲜香，豆腐滑嫩，下饭神器',
     price: 28.0,
+    stars: 3, // 荤菜：3颗爱心
     emoji: '🌶️',
     category: 'hot',
     categoryName: '热菜',
@@ -52,6 +55,7 @@ const dishes = [
     name: '红烧排骨',
     description: '色泽红亮，肉质酥烂，咸甜适中',
     price: 48.0,
+    stars: 5, // 荤菜：5颗爱心
     emoji: '🍖',
     category: 'hot',
     categoryName: '热菜',
@@ -64,6 +68,7 @@ const dishes = [
     name: '清蒸鲈鱼',
     description: '鱼肉鲜嫩，原汁原味，营养健康',
     price: 68.0,
+    stars: 5, // 荤菜：5颗爱心
     emoji: '🐟',
     category: 'hot',
     categoryName: '热菜',
@@ -78,6 +83,7 @@ const dishes = [
     name: '拍黄瓜',
     description: '清爽可口，蒜香浓郁，开胃小菜',
     price: 12.0,
+    stars: 1, // 素菜：1颗爱心
     emoji: '🥒',
     category: 'cold',
     categoryName: '凉菜',
@@ -90,6 +96,7 @@ const dishes = [
     name: '凉拌木耳',
     description: '口感爽脆，营养丰富，清淡健康',
     price: 15.0,
+    stars: 1, // 素菜：1颗爱心
     emoji: '🍄',
     category: 'cold',
     categoryName: '凉菜',
@@ -102,6 +109,7 @@ const dishes = [
     name: '夫妻肺片',
     description: '麻辣鲜香，牛肉薄而不柴，川菜经典',
     price: 36.0,
+    stars: 4, // 荤菜：4颗爱心
     emoji: '🥓',
     category: 'cold',
     categoryName: '凉菜',
@@ -110,12 +118,13 @@ const dishes = [
     soldCount: 198
   },
   
-  // 汤类
+  // 汤类 - 素菜 1-2颗爱心
   {
     id: '9',
     name: '番茄蛋花汤',
     description: '酸甜开胃，营养丰富，老少皆宜',
     price: 18.0,
+    stars: 2, // 素菜：2颗爱心
     emoji: '🍅',
     category: 'soup',
     categoryName: '汤类',
@@ -128,6 +137,7 @@ const dishes = [
     name: '酸辣汤',
     description: '酸辣开胃，口感丰富，暖心暖胃',
     price: 20.0,
+    stars: 2, // 素菜：2颗爱心
     emoji: '🥣',
     category: 'soup',
     categoryName: '汤类',
@@ -136,12 +146,13 @@ const dishes = [
     soldCount: 156
   },
   
-  // 主食
+  // 主食 - 2-3颗爱心
   {
     id: '11',
     name: '扬州炒饭',
     description: '粒粒分明，配料丰富，香气扑鼻',
     price: 25.0,
+    stars: 3, // 主食：3颗爱心
     emoji: '🍚',
     category: 'staple',
     categoryName: '主食',
@@ -154,6 +165,7 @@ const dishes = [
     name: '兰州拉面',
     description: '面条劲道，汤汁浓郁，西北特色',
     price: 22.0,
+    stars: 2, // 主食：2颗爱心
     emoji: '🍜',
     category: 'staple',
     categoryName: '主食',
@@ -166,6 +178,7 @@ const dishes = [
     name: '煎饺',
     description: '外焦里嫩，馅料饱满，回味无穷',
     price: 18.0,
+    stars: 2, // 主食：2颗爱心
     emoji: '🥟',
     category: 'staple',
     categoryName: '主食',
@@ -174,12 +187,13 @@ const dishes = [
     soldCount: 267
   },
   
-  // 甜品
+  // 甜品 - 酌情给 1-2颗爱心
   {
     id: '14',
     name: '红豆汤圆',
     description: '软糯香甜，红豆沙细腻，甜而不腻',
     price: 15.0,
+    stars: 2, // 甜品：2颗爱心
     emoji: '🍡',
     category: 'dessert',
     categoryName: '甜品',
@@ -192,6 +206,7 @@ const dishes = [
     name: '芒果布丁',
     description: '芒果香浓，口感细腻，清凉爽口',
     price: 18.0,
+    stars: 2, // 甜品：2颗爱心
     emoji: '🍮',
     category: 'dessert',
     categoryName: '甜品',
@@ -200,12 +215,13 @@ const dishes = [
     soldCount: 234
   },
   
-  // 饮料
+  // 饮料 - 酌情给 1-2颗爱心
   {
     id: '16',
     name: '鲜榨橙汁',
     description: '新鲜橙子现榨，维C丰富，健康饮品',
     price: 15.0,
+    stars: 2, // 饮料：2颗爱心
     emoji: '🍊',
     category: 'drinks',
     categoryName: '饮料',
@@ -218,6 +234,7 @@ const dishes = [
     name: '柠檬绿茶',
     description: '清新爽口，酸甜适中，解腻佳品',
     price: 12.0,
+    stars: 1, // 饮料：1颗爱心
     emoji: '🍋',
     category: 'drinks',
     categoryName: '饮料',
@@ -230,6 +247,7 @@ const dishes = [
     name: '奶茶',
     description: '奶香浓郁，茶味醇厚，人气饮品',
     price: 16.0,
+    stars: 2, // 奶茶：2颗爱心
     emoji: '🧋',
     category: 'drinks',
     categoryName: '饮料',

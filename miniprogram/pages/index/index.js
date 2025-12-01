@@ -41,6 +41,12 @@ Page({
     }
   },
 
+  // 生成爱心字符串
+  getStarsText(stars) {
+    if (!stars || stars <= 0) return '';
+    return '❤️'.repeat(stars);
+  },
+
   onShow() {
     console.log('首页 onShow');
     // 刷新购物车数据
@@ -76,12 +82,22 @@ Page({
       
       console.log('✅ 加载到的菜品数量:', dishes.length);
       
+      // 检查菜品是否有 stars 字段
+      if (dishes.length > 0) {
+        console.log('📝 第一道菜示例:', {
+          名称: dishes[0].name,
+          爱心数: dishes[0].stars,
+          价格: dishes[0].price
+        });
+      }
+      
       this.setData({
         allDishes: dishes,
         filteredDishes: dishes,
         loading: false
       }, () => {
         console.log('✅ 页面数据已更新');
+        console.log('💖 filteredDishes[0]的stars:', this.data.filteredDishes[0]?.stars);
         console.log('========== 加载完成 ==========');
       });
       

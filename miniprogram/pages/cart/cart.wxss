@@ -84,9 +84,22 @@
   color: #333;
 }
 
-.item-price {
+/* 爱心星级显示 */
+.item-stars {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.star-icon {
   font-size: 28rpx;
-  color: #999;
+  line-height: 1;
+}
+
+.item-total-stars {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
 }
 
 .remove-btn {
@@ -297,21 +310,17 @@
   color: #999;
 }
 
-.total-amount {
+/* 总爱心显示 */
+.total-stars-bar {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  gap: 6rpx;
+  flex-wrap: wrap;
 }
 
-.currency {
-  font-size: 24rpx;
-  color: #FF4D4F;
-  margin-right: 4rpx;
-}
-
-.price {
+.star-icon-large {
   font-size: 40rpx;
-  font-weight: bold;
-  color: #FF4D4F;
+  line-height: 1;
 }
 
 .checkout-btn {

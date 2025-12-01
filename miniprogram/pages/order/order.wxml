@@ -50,7 +50,11 @@
           <text class="item-name">{{item.dish.name}}</text>
           <text class="item-quantity">x{{item.quantity}}</text>
         </view>
-        <text class="item-price">¥{{item.itemTotal}}</text>
+        <view class="item-stars">
+          <block wx:for="{{item.totalStars}}" wx:for-item="star" wx:key="*this">
+            <text class="star-icon">❤️</text>
+          </block>
+        </view>
       </view>
     </view>
 
@@ -58,19 +62,31 @@
     <view class="price-section">
       <view class="price-row">
         <text class="price-label">小计</text>
-        <text class="price-value">¥{{subtotal}}</text>
+        <view class="price-stars">
+          <block wx:for="{{subtotalStars}}" wx:for-item="star" wx:key="*this">
+            <text class="star-icon">❤️</text>
+          </block>
+        </view>
       </view>
 
       <view class="price-row">
         <text class="price-label">配送费</text>
-        <text class="price-value">¥{{deliveryFee}}</text>
+        <view class="price-stars">
+          <block wx:for="{{deliveryStars}}" wx:for-item="star" wx:key="*this">
+            <text class="star-icon">❤️</text>
+          </block>
+        </view>
       </view>
 
       <view class="divider"></view>
 
       <view class="price-row total-row">
-        <text class="price-label">合计</text>
-        <text class="price-value total">¥{{totalAmount}}</text>
+        <text class="price-label total-label">合计</text>
+        <view class="price-stars total-stars">
+          <block wx:for="{{totalStars}}" wx:for-item="star" wx:key="*this">
+            <text class="star-icon-large">❤️</text>
+          </block>
+        </view>
       </view>
     </view>
   </view>

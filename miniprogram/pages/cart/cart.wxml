@@ -23,7 +23,11 @@
           <!-- 菜品详情 -->
           <view class="item-details">
             <view class="item-name">{{item.dish.name}}</view>
-            <view class="item-price">¥{{item.dish.price}}</view>
+            <view class="item-stars">
+              <block wx:for="{{item.dish.stars}}" wx:for-item="star" wx:key="*this">
+                <text class="star-icon">❤️</text>
+              </block>
+            </view>
           </view>
 
           <!-- 删除按钮 -->
@@ -59,7 +63,11 @@
           
           <view class="item-total">
             <text class="total-label">小计</text>
-            <text class="total-price">¥{{item.itemTotal}}</text>
+            <view class="item-total-stars">
+              <block wx:for="{{item.totalStars}}" wx:for-item="star" wx:key="*this">
+                <text class="star-icon">❤️</text>
+              </block>
+            </view>
           </view>
         </view>
       </view>
@@ -86,9 +94,10 @@
   <view wx:if="{{!isEmpty}}" class="checkout-bar">
     <view class="total-section">
       <view class="total-label">合计</view>
-      <view class="total-amount">
-        <text class="currency">¥</text>
-        <text class="price">{{formattedTotalPrice}}</text>
+      <view class="total-stars-bar">
+        <block wx:for="{{totalStars}}" wx:for-item="star" wx:key="*this">
+          <text class="star-icon-large">❤️</text>
+        </block>
       </view>
     </view>
     <button class="checkout-btn" bindtap="onCheckout">
