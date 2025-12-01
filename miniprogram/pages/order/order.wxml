@@ -1,0 +1,90 @@
+<!--pages/order/order.wxml-->
+<view class="container">
+  <!-- 联系人信息 -->
+  <view class="card contact-section">
+    <view class="section-header">
+      <text class="section-icon">👤</text>
+      <text class="section-title">联系人信息</text>
+    </view>
+    
+    <view class="form-item">
+      <view class="form-label">联系人</view>
+      <input 
+        class="form-input" 
+        type="text"
+        placeholder="请输入联系人姓名"
+        value="{{contactName}}"
+        bindinput="onContactNameInput"
+        maxlength="20"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">订单备注</view>
+      <textarea 
+        class="form-textarea" 
+        placeholder="口味、餐具等特殊要求..."
+        value="{{remarks}}"
+        bindinput="onRemarksInput"
+        maxlength="200"
+        show-confirm-bar="{{false}}"
+      />
+    </view>
+  </view>
+
+  <!-- 订单明细 -->
+  <view class="card order-section">
+    <view class="section-header">
+      <text class="section-icon">📋</text>
+      <text class="section-title">订单明细</text>
+    </view>
+    
+    <view class="order-items">
+      <view 
+        wx:for="{{cartItems}}" 
+        wx:key="index"
+        class="order-item"
+      >
+        <view class="item-emoji">{{item.dish.emoji}}</view>
+        <view class="item-info">
+          <text class="item-name">{{item.dish.name}}</text>
+          <text class="item-quantity">x{{item.quantity}}</text>
+        </view>
+        <text class="item-price">¥{{item.itemTotal}}</text>
+      </view>
+    </view>
+
+    <!-- 费用明细 -->
+    <view class="price-section">
+      <view class="price-row">
+        <text class="price-label">小计</text>
+        <text class="price-value">¥{{subtotal}}</text>
+      </view>
+
+      <view class="price-row">
+        <text class="price-label">配送费</text>
+        <text class="price-value">¥{{deliveryFee}}</text>
+      </view>
+
+      <view class="divider"></view>
+
+      <view class="price-row total-row">
+        <text class="price-label">合计</text>
+        <text class="price-value total">¥{{totalAmount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button class="submit-btn" bindtap="onSubmitOrder">
+      <text class="submit-icon">✓</text>
+      <text>提交订单</text>
+    </button>
+  </view>
+
+  <!-- Demo提示 -->
+  <view wx:if="{{demoMode}}" class="demo-tip">
+    💡 当前为Demo模式，订单将保存在本地
+  </view>
+</view>

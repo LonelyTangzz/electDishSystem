@@ -1,0 +1,98 @@
+<!--pages/cart/cart.wxml-->
+<view class="container">
+  <!-- 购物车列表 -->
+  <view wx:if="{{!isEmpty}}" class="cart-content">
+    <view class="cart-header">
+      <text class="cart-title">🛒 购物车</text>
+      <text class="cart-count">共 {{cartItems.length}} 件商品</text>
+    </view>
+
+    <view class="cart-list">
+      <view 
+        wx:for="{{cartItems}}" 
+        wx:key="index"
+        class="cart-item card"
+      >
+        <!-- 商品信息 -->
+        <view class="item-main">
+          <!-- 菜品图标 -->
+          <view class="item-image">
+            <text class="item-emoji">{{item.dish.emoji}}</text>
+          </view>
+          
+          <!-- 菜品详情 -->
+          <view class="item-details">
+            <view class="item-name">{{item.dish.name}}</view>
+            <view class="item-price">¥{{item.dish.price}}</view>
+          </view>
+
+          <!-- 删除按钮 -->
+          <view 
+            class="remove-btn"
+            data-id="{{item.dish.id}}"
+            data-name="{{item.dish.name}}"
+            bindtap="onRemove"
+          >
+            <text class="remove-icon">🗑️</text>
+          </view>
+        </view>
+
+        <!-- 数量控制和小计 -->
+        <view class="item-footer">
+          <view class="quantity-control">
+            <view 
+              class="control-btn decrease-btn"
+              data-id="{{item.dish.id}}"
+              bindtap="onDecrease"
+            >
+              －
+            </view>
+            <text class="quantity-text">{{item.quantity}}</text>
+            <view 
+              class="control-btn increase-btn"
+              data-id="{{item.dish.id}}"
+              bindtap="onIncrease"
+            >
+              ＋
+            </view>
+          </view>
+          
+          <view class="item-total">
+            <text class="total-label">小计</text>
+            <text class="total-price">¥{{item.itemTotal}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 清空购物车按钮 -->
+    <view class="clear-section">
+      <button class="clear-btn" bindtap="onClear">
+        <text class="clear-icon">🗑️</text>
+        <text>清空购物车</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:else class="empty-state">
+    <view class="empty-icon">🛒</view>
+    <view class="empty-text">购物车还是空的</view>
+    <view class="empty-hint">快去阿汤的小食堂点餐吧！</view>
+    <button class="go-shopping-btn" bindtap="goToIndex" hover-class="none">去点餐</button>
+  </view>
+
+  <!-- 底部结算栏 -->
+  <view wx:if="{{!isEmpty}}" class="checkout-bar">
+    <view class="total-section">
+      <view class="total-label">合计</view>
+      <view class="total-amount">
+        <text class="currency">¥</text>
+        <text class="price">{{formattedTotalPrice}}</text>
+      </view>
+    </view>
+    <button class="checkout-btn" bindtap="onCheckout">
+      去结算
+    </button>
+  </view>
+</view>

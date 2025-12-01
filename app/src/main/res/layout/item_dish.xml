@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_normal"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_normal">
+
+        <!-- 菜品图片 -->
+        <ImageView
+            android:id="@+id/dishImage"
+            android:layout_width="@dimen/dish_image_size"
+            android:layout_height="@dimen/dish_image_size"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/dish_detail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_dish_placeholder" />
+
+        <!-- 购物车数量标记 -->
+        <TextView
+            android:id="@+id/cartQuantity"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@color/primary"
+            android:gravity="center"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/dishImage"
+            app:layout_constraintTop_toTopOf="@id/dishImage"
+            tools:text="2"
+            tools:visibility="visible" />
+
+        <!-- 菜品名称 -->
+        <TextView
+            android:id="@+id/dishName"
+            style="@style/TextSubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/dishImage"
+            app:layout_constraintTop_toTopOf="@id/dishImage"
+            tools:text="宫保鸡丁" />
+
+        <!-- 菜品描述 -->
+        <TextView
+            android:id="@+id/dishDescription"
+            style="@style/TextBody"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/dishImage"
+            app:layout_constraintTop_toBottomOf="@id/dishName"
+            tools:text="经典川菜，鸡肉鲜嫩，花生酥脆" />
+
+        <!-- 评分 -->
+        <TextView
+            android:id="@+id/dishRating"
+            style="@style/TextCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:textColor="@color/rating"
+            app:layout_constraintStart_toEndOf="@id/dishImage"
+            app:layout_constraintTop_toBottomOf="@id/dishDescription"
+            tools:text="⭐ 4.8" />
+
+        <!-- 已售数量 -->
+        <TextView
+            android:id="@+id/dishSoldCount"
+            style="@style/TextCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            app:layout_constraintBaseline_toBaselineOf="@id/dishRating"
+            app:layout_constraintStart_toEndOf="@id/dishRating"
+            tools:text="已售 256 份" />
+
+        <!-- 价格 -->
+        <TextView
+            android:id="@+id/dishPrice"
+            style="@style/TextPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dishImage"
+            tools:text="¥38.00" />
+
+        <!-- 加入购物车按钮 -->
+        <Button
+            android:id="@+id/addToCartButton"
+            style="@style/ButtonPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minHeight="0dp"
+            android:paddingStart="@dimen/spacing_normal"
+            android:paddingEnd="@dimen/spacing_normal"
+            android:text="@string/add_to_cart"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintBottom_toBottomOf="@id/dishPrice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dishPrice" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
+

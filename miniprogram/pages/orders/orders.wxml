@@ -1,0 +1,82 @@
+<!--pages/orders/orders.wxml-->
+<view class="container">
+  <!-- 未登录状态 -->
+  <view wx:if="{{!hasUserInfo}}" class="empty-state">
+    <view class="empty-icon">🔐</view>
+    <view class="empty-text">请先登录查看订单</view>
+    <button class="login-btn btn-primary" bindtap="goToLogin">去登录</button>
+  </view>
+
+  <!-- 订单列表 -->
+  <view wx:else>
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading-state">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 订单列表 -->
+    <view wx:elif="{{orders.length > 0}}" class="orders-list">
+      <view 
+        wx:for="{{orders}}" 
+        wx:key="_id"
+        class="order-card card"
+      >
+        <!-- 订单头部 -->
+        <view class="order-header">
+          <view class="order-info">
+            <text class="order-number">订单号：{{item._id.substring(0, 10)}}</text>
+            <text class="order-time">{{item.formattedTime}}</text>
+          </view>
+          <view class="order-status {{item.status}}">
+            {{item.statusText}}
+          </view>
+        </view>
+
+        <!-- 订单商品 -->
+        <view class="order-items">
+          <view 
+            wx:for="{{item.items}}" 
+            wx:for-item="dish"
+            wx:key="dish.id"
+            class="order-item"
+          >
+            <view class="item-emoji">{{dish.dish.emoji}}</view>
+            <view class="item-detail">
+              <text class="item-name">{{dish.dish.name}}</text>
+              <text class="item-quantity">x{{dish.quantity}}</text>
+            </view>
+            <text class="item-price">¥{{dish.itemTotal}}</text>
+          </view>
+        </view>
+
+        <!-- 订单底部 -->
+        <view class="order-footer">
+          <view class="order-total">
+            <text class="total-label">总计：</text>
+            <text class="total-price">¥{{item.formattedTotal}}</text>
+          </view>
+          
+          <view class="order-actions">
+            <button 
+              wx:if="{{item.canReview}}" 
+              class="action-btn review-btn"
+              data-id="{{item._id}}"
+              data-index="{{index}}"
+              bindtap="goToReview"
+            >
+              去评价
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空订单状态 -->
+    <view wx:else class="empty-state">
+      <view class="empty-icon">📋</view>
+      <view class="empty-text">还没有订单\n快去点餐吧！</view>
+      <button class="order-btn btn-primary" bindtap="goToIndex">去点餐</button>
+    </view>
+  </view>
+</view>
+

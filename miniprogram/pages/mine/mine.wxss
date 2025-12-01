@@ -1,0 +1,132 @@
+/* pages/mine/mine.wxss */
+
+/* 用户卡片 */
+.user-card {
+  margin-bottom: 20rpx;
+  padding: 40rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
+}
+
+.avatar-placeholder {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F6FFED 0%, #E6FFFB 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64rpx;
+  margin-right: 24rpx;
+}
+
+.user-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.welcome {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.login-tip {
+  display: flex;
+  align-items: center;
+}
+
+.login-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #73D13D;
+  margin-bottom: 8rpx;
+}
+
+.login-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 订单统计 */
+.stats-card {
+  display: flex;
+  padding: 40rpx;
+  margin-bottom: 20rpx;
+}
+
+.stats-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-number {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #73D13D;
+  margin-bottom: 8rpx;
+}
+
+.stats-label {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.stats-divider {
+  width: 1rpx;
+  height: 80rpx;
+  background: #E0E0E0;
+}
+
+/* 功能菜单 */
+.menu-section {
+  margin-top: 20rpx;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+}
+
+.menu-icon {
+  font-size: 48rpx;
+  margin-right: 24rpx;
+}
+
+.menu-title {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.menu-arrow {
+  font-size: 48rpx;
+  color: #BDBDBD;
+  font-weight: 300;
+}
+

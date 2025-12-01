@@ -1,0 +1,75 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input 
+      class="search-input" 
+      placeholder="搜索菜品名称" 
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+      confirm-type="search"
+    />
+    <text wx:if="{{searchKeyword}}" class="clear-search" bindtap="onClearSearch">×</text>
+  </view>
+
+  <!-- 分类滚动 -->
+  <scroll-view class="category-scroll" scroll-x>
+    <view class="category-list">
+      <view 
+        wx:for="{{categories}}" 
+        wx:key="id"
+        class="category-item {{currentCategory === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onCategoryTap"
+      >
+        {{item.name}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 菜品列表 -->
+  <view class="dish-list">
+    <view 
+      wx:for="{{filteredDishes}}" 
+      wx:key="id"
+      class="dish-item card"
+    >
+      <view class="dish-image-wrapper">
+        <text class="dish-emoji">{{item.emoji}}</text>
+        <view wx:if="{{getDishQuantity(item.id) > 0}}" class="cart-badge">
+          {{getDishQuantity(item.id)}}
+        </view>
+      </view>
+      
+      <view class="dish-info">
+        <view class="dish-name">{{item.name}}</view>
+        <view class="dish-description">{{item.description}}</view>
+        <view class="dish-meta">
+          <text class="dish-rating">⭐ {{item.rating}}</text>
+          <text class="dish-sold">已售 {{item.soldCount}} 份</text>
+        </view>
+        <view class="dish-price-actions">
+          <text class="dish-price">¥{{item.price}}</text>
+          <view class="quantity-control">
+            <block wx:if="{{getDishQuantity(item.id) > 0}}">
+              <view class="control-btn" data-id="{{item.id}}" bindtap="onDecrease">－</view>
+              <text class="quantity-text">{{getDishQuantity(item.id)}}</text>
+            </block>
+            <view class="control-btn add-btn" data-id="{{item.id}}" bindtap="onIncrease">＋</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{filteredDishes.length === 0 && !loading}}" class="empty-state">
+    <view class="empty-icon">🍽️</view>
+    <view class="empty-text">暂无菜品</view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-state">
+    <text>加载中...</text>
+  </view>
+</view>

@@ -1,0 +1,110 @@
+/* pages/review/review.wxss */
+
+.overall-section,
+.dishes-section {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24rpx;
+}
+
+/* 评分组件 */
+.rating-box {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 8rpx;
+}
+
+.star {
+  font-size: 56rpx;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.star.active {
+  opacity: 1;
+}
+
+.rating-text {
+  margin-left: 16rpx;
+  font-size: 28rpx;
+  color: #666;
+  font-weight: bold;
+}
+
+/* 评论输入 */
+.comment-input {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 20rpx;
+  background: #F5F5F5;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* 菜品评价 */
+.dish-review-item {
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.dish-review-item:last-child {
+  border-bottom: none;
+}
+
+.dish-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.dish-emoji {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 8rpx;
+  background: linear-gradient(135deg, #F6FFED 0%, #E6FFFB 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  margin-right: 16rpx;
+}
+
+.dish-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.dish-comment {
+  width: 100%;
+  padding: 16rpx 20rpx;
+  background: #F5F5F5;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* 提交按钮 */
+.submit-wrapper {
+  padding: 40rpx 20rpx;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+

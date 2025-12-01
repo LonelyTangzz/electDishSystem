@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主题颜色 -->
+    <color name="primary">#FF6B35</color>
+    <color name="primary_dark">#E85A2A</color>
+    <color name="primary_light">#FF8C5A</color>
+    <color name="accent">#FFA726</color>
+    
+    <!-- 背景颜色 -->
+    <color name="background">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    
+    <!-- 文字颜色 -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    <color name="text_white">#FFFFFF</color>
+    
+    <!-- 功能颜色 -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FFC107</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
+    
+    <!-- 分割线 -->
+    <color name="divider">#E0E0E0</color>
+    
+    <!-- 价格颜色 -->
+    <color name="price">#FF5722</color>
+    
+    <!-- 评分颜色 -->
+    <color name="rating">#FFB300</color>
+    
+    <!-- 按钮颜色 -->
+    <color name="button_primary">#FF6B35</color>
+    <color name="button_secondary">#9E9E9E</color>
+    <color name="button_disabled">#E0E0E0</color>
+    
+    <!-- 透明度 -->
+    <color name="overlay_dark">#80000000</color>
+    <color name="overlay_light">#80FFFFFF</color>
+    
+    <!-- 黑白 -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+</resources>
+

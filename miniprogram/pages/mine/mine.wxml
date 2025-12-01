@@ -1,0 +1,66 @@
+<!--pages/mine/mine.wxml-->
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card card">
+    <view wx:if="{{hasUserInfo}}" class="user-info">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+      <view class="user-detail">
+        <text class="nickname">{{userInfo.nickName}}</text>
+        <text class="welcome">欢迎来到阿汤的小食堂</text>
+      </view>
+    </view>
+    
+    <view wx:else class="login-tip" bindtap="getUserProfile">
+      <view class="avatar-placeholder">👤</view>
+      <view class="login-text">
+        <text class="login-title">点击登录</text>
+        <text class="login-desc">登录后可查看订单历史</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单统计 -->
+  <view wx:if="{{hasUserInfo}}" class="stats-card card">
+    <view class="stats-item" bindtap="goToOrders" data-status="pending">
+      <text class="stats-number">{{orderStats.pending}}</text>
+      <text class="stats-label">待完成</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item" bindtap="goToOrders" data-status="completed">
+      <text class="stats-number">{{orderStats.completed}}</text>
+      <text class="stats-label">已完成</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item" bindtap="goToOrders">
+      <text class="stats-number">{{orderStats.total}}</text>
+      <text class="stats-label">全部订单</text>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-item card" bindtap="goToOrders">
+      <text class="menu-icon">📋</text>
+      <text class="menu-title">我的订单</text>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <!-- 云数据库初始化按钮（仅开发时显示） -->
+    <view wx:if="{{!demoMode && hasUserInfo}}" class="menu-item card" bindtap="initCloudDishes">
+      <text class="menu-icon">☁️</text>
+      <text class="menu-title">初始化云数据库</text>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view wx:if="{{hasUserInfo}}" class="menu-item card" bindtap="logout">
+      <text class="menu-icon">🚪</text>
+      <text class="menu-title">退出登录</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- Demo模式提示 -->
+  <view wx:if="{{demoMode}}" class="demo-tip">
+    💡 当前为Demo模式，数据保存在本地
+  </view>
+</view>

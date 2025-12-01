@@ -1,0 +1,79 @@
+<!--pages/review/review.wxml-->
+<view class="container">
+  <!-- 总体评分 -->
+  <view class="card overall-section">
+    <view class="section-title">📝 总体评价</view>
+    
+    <view class="rating-box">
+      <view class="rating-stars">
+        <view 
+          wx:for="{{[1,2,3,4,5]}}" 
+          wx:key="*this"
+          class="star {{overallRating >= item ? 'active' : ''}}"
+          data-rating="{{item}}"
+          bindtap="onOverallRatingChange"
+        >
+          ⭐
+        </view>
+      </view>
+      <text class="rating-text">{{overallRating}}分</text>
+    </view>
+
+    <textarea 
+      class="comment-input"
+      placeholder="说说您的用餐体验吧..."
+      value="{{comment}}"
+      bindinput="onCommentInput"
+      maxlength="200"
+    />
+  </view>
+
+  <!-- 菜品评价 -->
+  <view class="card dishes-section">
+    <view class="section-title">🍽️ 菜品评价</view>
+    
+    <view 
+      wx:for="{{reviews}}" 
+      wx:key="dishId"
+      class="dish-review-item"
+    >
+      <view class="dish-header">
+        <view class="dish-emoji">{{item.dishEmoji}}</view>
+        <text class="dish-name">{{item.dishName}}</text>
+      </view>
+
+      <view class="rating-box">
+        <view class="rating-stars">
+          <view 
+            wx:for="{{[1,2,3,4,5]}}" 
+            wx:for-item="star"
+            wx:key="*this"
+            class="star {{item.rating >= star ? 'active' : ''}}"
+            data-index="{{index}}"
+            data-rating="{{star}}"
+            bindtap="onRatingChange"
+          >
+            ⭐
+          </view>
+        </view>
+        <text class="rating-text">{{item.rating}}分</text>
+      </view>
+
+      <input 
+        class="dish-comment"
+        placeholder="说说这道菜的味道..."
+        value="{{item.comment}}"
+        data-index="{{index}}"
+        bindinput="onCommentInput"
+      />
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-wrapper">
+    <button class="submit-btn btn-primary" bindtap="onSubmitReview">
+      提交评价
+    </button>
+  </view>
+</view>
+

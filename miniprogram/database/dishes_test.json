@@ -1,0 +1,41 @@
+[
+  {
+    "id": "1",
+    "name": "宫保鸡丁",
+    "description": "经典川菜，鸡肉鲜嫩，花生酥脆，麻辣鲜香",
+    "price": 38,
+    "emoji": "🍗",
+    "category": "hot",
+    "categoryName": "热菜",
+    "isAvailable": true,
+    "rating": 4.8,
+    "soldCount": 256
+  },
+  {
+    "id": "2",
+    "name": "鱼香肉丝",
+    "description": "酸甜可口，色泽红润，肉丝嫩滑",
+    "price": 32,
+    "emoji": "🥩",
+    "category": "hot",
+    "categoryName": "热菜",
+    "isAvailable": true,
+    "rating": 4.7,
+    "soldCount": 189
+  },
+  {
+    "id": "3",
+    "name": "麻婆豆腐",
+    "description": "麻辣鲜香，豆腐滑嫩，下饭神器",
+    "price": 28,
+    "emoji": "🌶️",
+    "category": "hot",
+    "categoryName": "热菜",
+    "isAvailable": true,
+    "rating": 4.9,
+    "soldCount": 312
+  }
+]
+
+
+
