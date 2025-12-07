@@ -49,6 +49,48 @@
     </view>
   </view>
 
+  <!-- 配对信息卡片 -->
+  <view wx:if="{{hasUserInfo}}" class="couple-card card">
+    <view class="couple-header">
+      <text class="couple-icon">💑</text>
+      <text class="couple-title">配对信息</text>
+    </view>
+    
+    <!-- 已配对 -->
+    <view wx:if="{{partnerOpenid}}" class="couple-paired">
+      <view class="paired-info">
+        <text class="paired-label">已与TA配对</text>
+        <text class="paired-desc">互相为对方做美食 ❤️</text>
+      </view>
+      <button class="btn-unpair" bindtap="unpairPartner">解除配对</button>
+    </view>
+    
+    <!-- 未配对 -->
+    <view wx:else class="couple-unpaired">
+      <view class="my-openid">
+        <text class="openid-label">我的配对码：</text>
+        <view class="openid-box" bindtap="copyMyOpenid">
+          <text class="openid-text">{{myOpenid}}</text>
+          <text class="copy-icon">📋</text>
+        </view>
+        <text class="openid-tip">点击复制，发给TA</text>
+      </view>
+      
+      <view class="input-partner">
+        <text class="input-label">输入TA的配对码：</text>
+        <input 
+          class="partner-input" 
+          placeholder="粘贴TA的配对码"
+          value="{{partnerInputValue}}"
+          bindinput="onPartnerInput"
+        />
+        <button class="btn-pair" bindtap="pairWithPartner">
+          💕 配对
+        </button>
+      </view>
+    </view>
+  </view>
+
   <!-- 订单统计 -->
   <view wx:if="{{hasUserInfo}}" class="stats-card card">
     <view class="stats-item" bindtap="goToOrders" data-status="pending">

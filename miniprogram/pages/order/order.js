@@ -145,6 +145,9 @@ Page({
     util.showLoading('提交中...');
 
     try {
+      // 获取配对的伴侣 openid
+      const partnerOpenid = app.globalData.partnerOpenid || '';
+      
       // 创建订单数据
       const orderData = {
         openid: app.globalData.openid,
@@ -153,10 +156,12 @@ Page({
         totalAmount: parseFloat(totalAmount),
         remarks: remarks || '',
         status: 'pending',
-        hasReview: false
+        hasReview: false,
+        forChef: partnerOpenid  // 分配给配对的另一方
       };
 
       console.log('订单数据:', orderData);
+      console.log('订单将分配给:', partnerOpenid || '（未配对）');
 
       let result;
       

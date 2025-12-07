@@ -9,7 +9,7 @@
 /* 顶部统计栏 */
 .stats-bar {
   display: flex;
-  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  background: linear-gradient(135deg, #FF85C0 0%, #F759AB 100%);
   padding: 40rpx 30rpx;
   color: white;
 }
@@ -52,7 +52,7 @@
 }
 
 .tab-item.active {
-  color: #66BB6A;
+  color: #F759AB;
   font-weight: bold;
 }
 
@@ -64,7 +64,7 @@
   transform: translateX(-50%);
   width: 60rpx;
   height: 6rpx;
-  background: #66BB6A;
+  background: #F759AB;
   border-radius: 3rpx;
 }
 
@@ -267,7 +267,7 @@
 .total-price {
   font-size: 36rpx;
   font-weight: bold;
-  color: #66BB6A;
+  color: #F759AB;
 }
 
 /* 操作按钮 */
@@ -288,18 +288,15 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  background: linear-gradient(135deg, #FF85C0 0%, #F759AB 100%);
   color: white;
-}
-
-.btn-secondary {
-  background: #f5f5f5;
-  color: #666;
+  flex: 1;
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+  background: linear-gradient(135deg, #52C41A 0%, #389E0D 100%);
   color: white;
+  flex: 1;
 }
 
 .completed-time {
@@ -317,12 +314,12 @@
   bottom: 120rpx;
   width: 100rpx;
   height: 100rpx;
-  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  background: linear-gradient(135deg, #FF85C0 0%, #F759AB 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 20rpx rgba(102, 187, 106, 0.4);
+  box-shadow: 0 8rpx 20rpx rgba(247, 89, 171, 0.4);
 }
 
 .refresh-icon {

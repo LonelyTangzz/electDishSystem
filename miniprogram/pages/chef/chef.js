@@ -30,7 +30,7 @@ Page({
 
   /**
    * 检查厨师权限
-   * 注意：实际应用中应该在数据库中配置厨师 openid 列表
+   * 情侣模式：只有配对后才能看到对方的订单
    */
   async checkChefPermission() {
     try {
@@ -39,7 +39,7 @@ Page({
       if (!openid) {
         wx.showModal({
           title: '需要登录',
-          content: '请先登录后再访问厨师页面',
+          content: '请先登录后再查看TA的点餐',
           showCancel: false,
           success: () => {
             wx.switchTab({ url: '/pages/mine/mine' });
@@ -50,28 +50,32 @@ Page({
 
       this.setData({ 
         openid,
-        isChef: true // 暂时允许所有登录用户访问（演示模式）
+        isChef: true
       });
 
-      // 实际应用中应该检查数据库中的厨师权限
-      // const isChef = await this.checkChefInDatabase(openid);
-      // this.setData({ isChef });
+      // 检查是否已配对
+      const partnerOpenid = app.globalData.partnerOpenid;
+      if (!partnerOpenid) {
+        wx.showModal({
+          title: '还未配对',
+          content: '请先在"我的"页面完成配对，\n才能看到TA的点餐哦~ 💕',
+          showCancel: false,
+          confirmText: '去配对',
+          success: (res) => {
+            if (res.confirm) {
+              wx.switchTab({ url: '/pages/mine/mine' });
+            }
+          }
+        });
+        return;
+      }
 
       if (this.data.isChef) {
         this.loadOrders();
-      } else {
-        wx.showModal({
-          title: '权限不足',
-          content: '您没有访问厨师页面的权限',
-          showCancel: false,
-          success: () => {
-            wx.switchTab({ url: '/pages/index/index' });
-          }
-        });
       }
     } catch (error) {
-      console.error('检查厨师权限失败:', error);
-      util.showToast('检查权限失败', 'error');
+      console.error('检查权限失败:', error);
+      util.showToast('检查失败', 'error');
     }
   },
 
@@ -93,7 +97,11 @@ Page({
 
       // 根据当前标签加载不同状态的订单
       const status = this.data.currentTab;
-      const orders = await db.getOrdersByStatus(status);
+      const allOrders = await db.getOrdersByStatus(status);
+      
+      // 只显示分配给自己的订单（forChef 字段等于自己的 openid）
+      const myOpenid = app.globalData.openid;
+      const orders = allOrders.filter(order => order.forChef === myOpenid);
 
       // 格式化订单数据
       const formattedOrders = orders.map(order => {
@@ -130,13 +138,20 @@ Page({
    */
   async updateStats() {
     try {
-      const pendingOrders = await db.getOrdersByStatus('pending');
-      const cookingOrders = await db.getOrdersByStatus('cooking');
+      const myOpenid = app.globalData.openid;
+      
+      const allPendingOrders = await db.getOrdersByStatus('pending');
+      const allCookingOrders = await db.getOrdersByStatus('cooking');
+      
+      // 只统计分配给自己的订单
+      const pendingOrders = allPendingOrders.filter(order => order.forChef === myOpenid);
+      const cookingOrders = allCookingOrders.filter(order => order.forChef === myOpenid);
       
       // 获取今日完成订单
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const completedOrders = await db.getOrdersByStatusAndTime('completed', today.getTime());
+      const allCompletedOrders = await db.getOrdersByStatusAndTime('completed', today.getTime());
+      const completedOrders = allCompletedOrders.filter(order => order.forChef === myOpenid);
 
       this.setData({
         'stats.pending': pendingOrders.length,
@@ -155,26 +170,19 @@ Page({
     const orderId = e.currentTarget.dataset.id;
     
     try {
-      const result = await wx.showModal({
-        title: '确认接单',
-        content: '确认接单并开始制作？'
-      });
-
-      if (!result.confirm) return;
-
       wx.showLoading({ title: '处理中...', mask: true });
 
       await db.updateOrderStatus(orderId, 'cooking');
 
       wx.hideLoading();
-      util.showToast('已接单，开始制作', 'success');
+      util.showToast('开始做啦~ 💪', 'success');
       
       // 刷新订单列表
       this.loadOrders();
     } catch (error) {
-      console.error('接单失败:', error);
+      console.error('操作失败:', error);
       wx.hideLoading();
-      util.showToast('接单失败', 'error');
+      util.showToast('操作失败', 'error');
     }
   },
 
@@ -216,26 +224,19 @@ Page({
     const orderId = e.currentTarget.dataset.id;
     
     try {
-      const result = await wx.showModal({
-        title: '确认完成',
-        content: '确认此订单已完成出餐？'
-      });
-
-      if (!result.confirm) return;
-
       wx.showLoading({ title: '处理中...', mask: true });
 
       await db.updateOrderStatus(orderId, 'completed', Date.now());
 
       wx.hideLoading();
-      util.showToast('订单已完成', 'success');
+      util.showToast('做好了！快叫TA来吃吧~ 😋', 'success');
       
       // 刷新订单列表
       this.loadOrders();
     } catch (error) {
-      console.error('完成订单失败:', error);
+      console.error('操作失败:', error);
       wx.hideLoading();
-      util.showToast('完成订单失败', 'error');
+      util.showToast('操作失败', 'error');
     }
   },
 

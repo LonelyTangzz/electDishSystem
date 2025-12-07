@@ -4,11 +4,11 @@
   <view class="stats-bar">
     <view class="stat-item">
       <text class="stat-number">{{stats.pending}}</text>
-      <text class="stat-label">待处理</text>
+      <text class="stat-label">TA要吃</text>
     </view>
     <view class="stat-item">
       <text class="stat-number">{{stats.cooking}}</text>
-      <text class="stat-label">制作中</text>
+      <text class="stat-label">正在做</text>
     </view>
     <view class="stat-item">
       <text class="stat-number">{{stats.completed}}</text>
@@ -23,14 +23,14 @@
       bindtap="switchTab"
       data-tab="pending"
     >
-      待处理 ({{stats.pending}})
+      TA要吃 ({{stats.pending}})
     </view>
     <view 
       class="tab-item {{currentTab === 'cooking' ? 'active' : ''}}"
       bindtap="switchTab"
       data-tab="cooking"
     >
-      制作中 ({{stats.cooking}})
+      正在做 ({{stats.cooking}})
     </view>
     <view 
       class="tab-item {{currentTab === 'completed' ? 'active' : ''}}"
@@ -44,8 +44,8 @@
   <!-- 订单列表 -->
   <scroll-view class="order-list" scroll-y>
     <view wx:if="{{orders.length === 0}}" class="empty-state">
-      <text class="empty-icon">📋</text>
-      <text class="empty-text">暂无订单</text>
+      <text class="empty-icon">💕</text>
+      <text class="empty-text">TA还没点餐哦~</text>
     </view>
 
     <view wx:for="{{orders}}" wx:key="_id" class="order-card">
@@ -62,8 +62,8 @@
 
       <!-- 顾客信息 -->
       <view class="customer-info">
-        <text class="customer-icon">👤</text>
-        <text class="customer-name">{{item.contactPerson || '顾客'}}</text>
+        <text class="customer-icon">💑</text>
+        <text class="customer-name">{{item.contactPerson || 'TA'}}</text>
         <text wx:if="{{item.remark}}" class="remark-icon">💬</text>
       </view>
 
@@ -96,18 +96,11 @@
         <!-- 待处理状态 -->
         <block wx:if="{{item.status === 'pending'}}">
           <button 
-            class="btn btn-secondary" 
-            bindtap="rejectOrder" 
-            data-id="{{item._id}}"
-          >
-            拒单
-          </button>
-          <button 
             class="btn btn-primary" 
             bindtap="acceptOrder" 
             data-id="{{item._id}}"
           >
-            接单制作
+            💪 开始做
           </button>
         </block>
 
@@ -118,7 +111,7 @@
             bindtap="completeOrder" 
             data-id="{{item._id}}"
           >
-            完成出餐
+            ✅ 做好了
           </button>
         </block>
 

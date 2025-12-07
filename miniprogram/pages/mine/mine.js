@@ -19,7 +19,11 @@ Page({
       completed: 0,
       total: 0
     },
-    demoMode: true
+    demoMode: true,
+    // 配对相关
+    myOpenid: '',
+    partnerOpenid: '',
+    partnerInputValue: ''
   },
 
   onLoad() {
@@ -35,6 +39,7 @@ Page({
     
     if (this.data.hasUserInfo) {
       this.loadOrderStats();
+      this.loadCoupleInfo();
     }
   },
 
@@ -225,6 +230,112 @@ Page({
     util.showConfirm('初始化云数据库', '确定要初始化菜品数据到云数据库吗？\n\n注意：如果已有数据，会产生重复。').then(confirm => {
       if (confirm) {
         initDishes.initDishesToCloud();
+      }
+    });
+  },
+
+  // ==================== 配对相关方法 ====================
+  
+  /**
+   * 加载配对信息
+   */
+  async loadCoupleInfo() {
+    try {
+      const openid = app.globalData.openid;
+      if (!openid) return;
+      
+      this.setData({ myOpenid: openid });
+      
+      // 从本地存储获取配对信息
+      const partnerOpenid = wx.getStorageSync('partnerOpenid') || '';
+      this.setData({ partnerOpenid });
+      
+      // 同时保存到全局数据
+      app.globalData.partnerOpenid = partnerOpenid;
+    } catch (error) {
+      console.error('加载配对信息失败:', error);
+    }
+  },
+
+  /**
+   * 复制我的 openid
+   */
+  copyMyOpenid() {
+    wx.setClipboardData({
+      data: this.data.myOpenid,
+      success: () => {
+        util.showSuccess('配对码已复制！\n发给TA完成配对 💕');
+      }
+    });
+  },
+
+  /**
+   * 输入伴侣 openid
+   */
+  onPartnerInput(e) {
+    this.setData({
+      partnerInputValue: e.detail.value
+    });
+  },
+
+  /**
+   * 与伴侣配对
+   */
+  async pairWithPartner() {
+    const partnerOpenid = this.data.partnerInputValue.trim();
+    
+    if (!partnerOpenid) {
+      util.showToast('请输入TA的配对码', 'none');
+      return;
+    }
+    
+    if (partnerOpenid === this.data.myOpenid) {
+      util.showToast('不能和自己配对哦~', 'none');
+      return;
+    }
+    
+    try {
+      // 保存配对信息到本地
+      wx.setStorageSync('partnerOpenid', partnerOpenid);
+      app.globalData.partnerOpenid = partnerOpenid;
+      
+      this.setData({
+        partnerOpenid: partnerOpenid,
+        partnerInputValue: ''
+      });
+      
+      util.showSuccess('配对成功！💕\n现在你们可以互相做美食啦~');
+    } catch (error) {
+      console.error('配对失败:', error);
+      util.showToast('配对失败，请重试', 'error');
+    }
+  },
+
+  /**
+   * 解除配对
+   */
+  unpairPartner() {
+    wx.showModal({
+      title: '解除配对',
+      content: '确定要解除与TA的配对吗？',
+      confirmColor: '#C41D7F',
+      success: (res) => {
+        if (res.confirm) {
+          try {
+            wx.removeStorageSync('partnerOpenid');
+            app.globalData.partnerOpenid = '';
+            
+            this.setData({
+              partnerOpenid: '',
+              partnerInputValue: ''
+            });
+            
+            util.showSuccess('已解除配对');
+          } catch (error) {
+            console.error('解除配对失败:', error);
+            util.showToast('操作失败，请重试', 'error');
+          }
+        }
       }
     });
   },
