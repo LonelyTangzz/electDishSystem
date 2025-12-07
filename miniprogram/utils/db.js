@@ -157,6 +157,43 @@ const OrderDB = {
       console.error('更新订单状态失败', err);
       return { success: false, error: err };
     }
+  },
+
+  // 根据状态获取所有订单（厨师端使用）
+  async getOrdersByStatus(status) {
+    initDB();
+    if (!db) return [];
+    
+    try {
+      const res = await db.collection('orders')
+        .where({ status: status })
+        .orderBy('createTime', 'desc')
+        .limit(100)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('获取订单失败', err);
+      return [];
+    }
+  },
+
+  // 根据状态和时间获取订单（厨师端统计使用）
+  async getOrdersByStatusAndTime(status, startTime) {
+    initDB();
+    if (!db) return [];
+    
+    try {
+      const res = await db.collection('orders')
+        .where({
+          status: status,
+          createTime: _.gte(startTime)
+        })
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('获取订单失败', err);
+      return [];
+    }
   }
 };
 
@@ -295,10 +332,40 @@ const UserDB = {
   }
 };
 
+// 导出简化的API（向后兼容）
 module.exports = {
+  // 完整的模块导出
   DishDB,
   OrderDB,
   ReviewDB,
-  UserDB
+  UserDB,
+  
+  // 简化的API（chef页面使用）
+  getOrdersByStatus: OrderDB.getOrdersByStatus.bind(OrderDB),
+  getOrdersByStatusAndTime: OrderDB.getOrdersByStatusAndTime.bind(OrderDB),
+  updateOrderStatus: async (orderId, status, completedTime) => {
+    initDB();
+    if (!db) return { success: false };
+    
+    try {
+      const updateData = {
+        status: status,
+        updateTime: db.serverDate()
+      };
+      
+      // 如果是完成状态，添加完成时间
+      if (status === 'completed' && completedTime) {
+        updateData.completedTime = completedTime;
+      }
+      
+      await db.collection('orders').doc(orderId).update({
+        data: updateData
+      });
+      return { success: true };
+    } catch (err) {
+      console.error('更新订单状态失败', err);
+      throw err;
+    }
+  }
 };
 

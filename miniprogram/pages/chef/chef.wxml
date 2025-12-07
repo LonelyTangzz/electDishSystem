@@ -1,0 +1,138 @@
+<!--miniprogram/pages/chef/chef.wxml-->
+<view class="container">
+  <!-- 顶部统计 -->
+  <view class="stats-bar">
+    <view class="stat-item">
+      <text class="stat-number">{{stats.pending}}</text>
+      <text class="stat-label">待处理</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-number">{{stats.cooking}}</text>
+      <text class="stat-label">制作中</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-number">{{stats.completed}}</text>
+      <text class="stat-label">今日完成</text>
+    </view>
+  </view>
+
+  <!-- 标签切换 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{currentTab === 'pending' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="pending"
+    >
+      待处理 ({{stats.pending}})
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'cooking' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="cooking"
+    >
+      制作中 ({{stats.cooking}})
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'completed' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="completed"
+    >
+      已完成
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <scroll-view class="order-list" scroll-y>
+    <view wx:if="{{orders.length === 0}}" class="empty-state">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无订单</text>
+    </view>
+
+    <view wx:for="{{orders}}" wx:key="_id" class="order-card">
+      <!-- 订单头部 -->
+      <view class="order-header">
+        <view class="order-info">
+          <text class="order-number">订单 #{{item.orderNumber}}</text>
+          <text class="order-time">{{item.createTimeFormatted}}</text>
+        </view>
+        <view class="status-badge status-{{item.status}}">
+          {{item.statusText}}
+        </view>
+      </view>
+
+      <!-- 顾客信息 -->
+      <view class="customer-info">
+        <text class="customer-icon">👤</text>
+        <text class="customer-name">{{item.contactPerson || '顾客'}}</text>
+        <text wx:if="{{item.remark}}" class="remark-icon">💬</text>
+      </view>
+
+      <!-- 备注信息 -->
+      <view wx:if="{{item.remark}}" class="remark-box">
+        <text class="remark-label">备注：</text>
+        <text class="remark-text">{{item.remark}}</text>
+      </view>
+
+      <!-- 菜品列表 -->
+      <view class="dishes-list">
+        <view wx:for="{{item.items}}" wx:for-item="dish" wx:key="id" class="dish-item">
+          <view class="dish-info">
+            <text class="dish-emoji">{{dish.emoji}}</text>
+            <text class="dish-name">{{dish.name}}</text>
+            <text class="dish-quantity">x{{dish.quantity}}</text>
+          </view>
+          <text class="dish-price">¥{{dish.subtotal}}</text>
+        </view>
+      </view>
+
+      <!-- 订单总计 -->
+      <view class="order-footer">
+        <text class="total-label">合计：</text>
+        <text class="total-price">¥{{item.totalAmount}}</text>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <!-- 待处理状态 -->
+        <block wx:if="{{item.status === 'pending'}}">
+          <button 
+            class="btn btn-secondary" 
+            bindtap="rejectOrder" 
+            data-id="{{item._id}}"
+          >
+            拒单
+          </button>
+          <button 
+            class="btn btn-primary" 
+            bindtap="acceptOrder" 
+            data-id="{{item._id}}"
+          >
+            接单制作
+          </button>
+        </block>
+
+        <!-- 制作中状态 -->
+        <block wx:if="{{item.status === 'cooking'}}">
+          <button 
+            class="btn btn-success" 
+            bindtap="completeOrder" 
+            data-id="{{item._id}}"
+          >
+            完成出餐
+          </button>
+        </block>
+
+        <!-- 已完成状态 -->
+        <block wx:if="{{item.status === 'completed'}}">
+          <text class="completed-time">{{item.completedTimeFormatted}}</text>
+        </block>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 刷新按钮 -->
+  <view class="refresh-btn" bindtap="refreshOrders">
+    <text class="refresh-icon">🔄</text>
+  </view>
+</view>
+

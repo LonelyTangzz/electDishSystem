@@ -5,7 +5,8 @@
     "pages/order/order",
     "pages/orders/orders",
     "pages/mine/mine",
-    "pages/review/review"
+    "pages/review/review",
+    "pages/chef/chef"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -31,6 +32,10 @@
       {
         "pagePath": "pages/orders/orders",
         "text": "订单"
+      },
+      {
+        "pagePath": "pages/chef/chef",
+        "text": "厨房"
       },
       {
         "pagePath": "pages/mine/mine",

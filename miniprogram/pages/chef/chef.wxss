@@ -1,0 +1,341 @@
+/* miniprogram/pages/chef/chef.wxss */
+
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 100rpx;
+}
+
+/* 顶部统计栏 */
+.stats-bar {
+  display: flex;
+  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  padding: 40rpx 30rpx;
+  color: white;
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.stat-label {
+  display: block;
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+/* 标签切换 */
+.tabs {
+  display: flex;
+  background: white;
+  border-bottom: 1rpx solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #66BB6A;
+  font-weight: bold;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background: #66BB6A;
+  border-radius: 3rpx;
+}
+
+/* 订单列表 */
+.order-list {
+  height: calc(100vh - 300rpx);
+  padding: 20rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  display: block;
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  display: block;
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 订单卡片 */
+.order-card {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 订单头部 */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-number {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.order-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 状态徽章 */
+.status-badge {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.status-pending {
+  background: #FFF3E0;
+  color: #F57C00;
+}
+
+.status-cooking {
+  background: #E3F2FD;
+  color: #1976D2;
+}
+
+.status-completed {
+  background: #E8F5E9;
+  color: #388E3C;
+}
+
+.status-cancelled {
+  background: #FFEBEE;
+  color: #D32F2F;
+}
+
+/* 顾客信息 */
+.customer-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding: 15rpx 20rpx;
+  background: #F5F5F5;
+  border-radius: 8rpx;
+}
+
+.customer-icon {
+  font-size: 32rpx;
+  margin-right: 10rpx;
+}
+
+.customer-name {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+.remark-icon {
+  font-size: 28rpx;
+}
+
+/* 备注信息 */
+.remark-box {
+  background: #FFF9C4;
+  padding: 15rpx 20rpx;
+  border-radius: 8rpx;
+  margin-bottom: 20rpx;
+  border-left: 4rpx solid #FBC02D;
+}
+
+.remark-label {
+  font-size: 24rpx;
+  color: #F57F17;
+  font-weight: bold;
+}
+
+.remark-text {
+  font-size: 26rpx;
+  color: #666;
+  margin-left: 10rpx;
+}
+
+/* 菜品列表 */
+.dishes-list {
+  margin: 20rpx 0;
+}
+
+.dish-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx dashed #eee;
+}
+
+.dish-item:last-child {
+  border-bottom: none;
+}
+
+.dish-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.dish-emoji {
+  font-size: 36rpx;
+  margin-right: 15rpx;
+}
+
+.dish-name {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+.dish-quantity {
+  font-size: 26rpx;
+  color: #666;
+  margin-left: 20rpx;
+}
+
+.dish-price {
+  font-size: 28rpx;
+  color: #666;
+  margin-left: 20rpx;
+}
+
+/* 订单底部 */
+.order-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f0f0f0;
+  margin-top: 10rpx;
+}
+
+.total-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-right: 10rpx;
+}
+
+.total-price {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #66BB6A;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 25rpx;
+}
+
+.btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  color: white;
+}
+
+.btn-secondary {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+  color: white;
+}
+
+.completed-time {
+  display: block;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  padding: 10rpx 0;
+}
+
+/* 刷新按钮 */
+.refresh-btn {
+  position: fixed;
+  right: 30rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(102, 187, 106, 0.4);
+}
+
+.refresh-icon {
+  font-size: 48rpx;
+  animation: rotate 1s ease-in-out;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
