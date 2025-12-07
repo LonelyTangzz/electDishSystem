@@ -4,12 +4,16 @@ const db = require('../../utils/db.js');
 const demoStorage = require('../../utils/demoStorage.js');
 const util = require('../../utils/util.js');
 const initDishes = require('../../utils/initDishes.js');
+const userManager = require('../../utils/userManager.js');
 
 Page({
   data: {
     userInfo: null,
     hasUserInfo: false,
     canIUseGetUserProfile: wx.canIUse('getUserProfile'),
+    canIUseButton: wx.canIUse('button.open-type.getUserInfo'),
+    userAvatarTemp: '',  // 临时头像
+    userNicknameTemp: '',  // 临时昵称
     orderStats: {
       pending: 0,
       completed: 0,
@@ -23,6 +27,19 @@ Page({
       demoMode: app.globalData.demoMode
     });
     
+    this.checkLoginStatus();
+  },
+
+  onShow() {
+    this.checkLoginStatus();
+    
+    if (this.data.hasUserInfo) {
+      this.loadOrderStats();
+    }
+  },
+
+  // 检查登录状态
+  checkLoginStatus() {
     // 检查是否已登录
     if (app.globalData.userInfo) {
       this.setData({
@@ -31,60 +48,128 @@ Page({
       });
       this.loadOrderStats();
     } else {
-      // Demo模式：尝试从本地存储恢复用户信息
-      if (app.globalData.demoMode) {
-        try {
-          const savedUserInfo = wx.getStorageSync('demo_userInfo');
-          if (savedUserInfo) {
-            app.setUserInfo(savedUserInfo);
-            this.setData({
-              userInfo: savedUserInfo,
-              hasUserInfo: true
-            });
-            this.loadOrderStats();
-          }
-        } catch (err) {
-          console.log('未找到本地用户信息');
-        }
-      }
-    }
-  },
-
-  onShow() {
-    if (this.data.hasUserInfo) {
-      this.loadOrderStats();
-    }
-  },
-
-  // 获取用户信息
-  getUserProfile() {
-    wx.getUserProfile({
-      desc: '用于完善用户资料',
-      success: (res) => {
-        const userInfo = res.userInfo;
+      // 尝试从本地存储恢复用户信息
+      const userInfo = userManager.restoreUserInfo();
+      if (userInfo) {
         this.setData({
           userInfo: userInfo,
           hasUserInfo: true
         });
-        app.setUserInfo(userInfo);
-        
-        // 保存用户信息
-        if (app.globalData.openid) {
-          if (app.globalData.demoMode) {
-            demoStorage.DemoUserStorage.saveUserInfo(app.globalData.openid, userInfo);
-          } else {
-            db.UserDB.saveUserInfo(app.globalData.openid, userInfo);
-          }
-        }
-        
+        this.loadOrderStats();
+      } else {
+        this.setData({
+          userInfo: null,
+          hasUserInfo: false
+        });
+      }
+    }
+  },
+
+  // 通过按钮获取用户信息（老方式，用于兼容）
+  onGetUserInfo(e) {
+    console.log('按钮获取用户信息:', e);
+    if (e.detail.userInfo) {
+      userManager.getUserInfoByButton(e)
+        .then(userInfo => {
+          this.setData({
+            userInfo: userInfo,
+            hasUserInfo: true
+          });
+          util.showSuccess('登录成功');
+          this.loadOrderStats();
+        })
+        .catch(err => {
+          console.error('获取用户信息失败:', err);
+          util.showError('您拒绝了授权');
+        });
+    } else {
+      util.showError('您拒绝了授权');
+    }
+  },
+
+  // 获取用户信息（新方式）
+  getUserProfile() {
+    console.log('===== 开始获取用户信息 =====');
+    userManager.getUserProfile()
+      .then(userInfo => {
+        console.log('✅ 获取用户信息成功:', userInfo);
+        this.setData({
+          userInfo: userInfo,
+          hasUserInfo: true
+        });
         util.showSuccess('登录成功');
         this.loadOrderStats();
-      },
-      fail: (err) => {
-        console.error('获取用户信息失败', err);
-        util.showError('登录失败');
-      }
+      })
+      .catch(err => {
+        console.error('❌ 获取用户信息失败:', err);
+        if (err.message && err.message.includes('微信版本')) {
+          util.showError('请升级微信版本');
+        } else if (err.errMsg && err.errMsg.includes('cancel')) {
+          util.showError('您取消了授权');
+        } else {
+          util.showError('登录失败，请重试');
+        }
+      });
+  },
+
+  // 选择头像（新方式）
+  onChooseAvatar(e) {
+    console.log('✅ 用户选择了头像:', e.detail.avatarUrl);
+    this.setData({
+      userAvatarTemp: e.detail.avatarUrl
     });
+  },
+
+  // 输入昵称（新方式）
+  onNicknameChange(e) {
+    console.log('✅ 用户输入了昵称:', e.detail.value);
+    this.setData({
+      userNicknameTemp: e.detail.value
+    });
+  },
+
+  // 新方式登录：使用头像昵称填写组件
+  handleNewLogin() {
+    const { userAvatarTemp, userNicknameTemp } = this.data;
+    
+    if (!userNicknameTemp || userNicknameTemp.trim() === '') {
+      util.showError('请输入昵称');
+      return;
+    }
+
+    console.log('===== 使用新方式登录 =====');
+    console.log('头像:', userAvatarTemp);
+    console.log('昵称:', userNicknameTemp);
+
+    // 构建用户信息对象
+    const userInfo = {
+      nickName: userNicknameTemp,
+      avatarUrl: userAvatarTemp || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+    };
+
+    // 保存用户信息
+    userManager.saveUserInfo(userInfo);
+
+    this.setData({
+      userInfo: userInfo,
+      hasUserInfo: true,
+      userAvatarTemp: '',
+      userNicknameTemp: ''
+    });
+
+    util.showSuccess('登录成功');
+    this.loadOrderStats();
+  },
+
+  // 旧方式登录：使用getUserProfile
+  handleOldLogin() {
+    this.getUserProfile();
+  },
+
+  // 点击登录按钮（兼容旧代码）
+  handleLogin() {
+    // 优先使用新方式
+    this.handleNewLogin();
   },
 
   // 加载订单统计
@@ -157,12 +242,12 @@ Page({
             total: 0
           }
         });
+        
+        // 清除全局数据
         app.setUserInfo(null);
         
-        // Demo模式：清除本地存储
-        if (app.globalData.demoMode) {
-          wx.removeStorageSync('demo_userInfo');
-        }
+        // 调用 userManager 的 logout 方法，清除所有缓存
+        userManager.logout();
         
         util.showSuccess('已退出登录');
       }

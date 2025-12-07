@@ -10,12 +10,42 @@
       </view>
     </view>
     
-    <view wx:else class="login-tip" bindtap="getUserProfile">
-      <view class="avatar-placeholder">👤</view>
+    <view wx:else class="login-container">
+      <!-- 头像选择 -->
+      <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar-placeholder" src="{{userAvatarTemp || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill" />
+      </button>
+      
       <view class="login-text">
-        <text class="login-title">点击登录</text>
-        <text class="login-desc">登录后可查看订单历史</text>
+        <text class="login-title">欢迎来到阿汤的小食堂</text>
+        <text class="login-desc">点击头像设置，输入昵称完成登录</text>
       </view>
+      
+      <!-- 昵称输入 -->
+      <view class="nickname-input-wrapper">
+        <input 
+          type="nickname" 
+          class="nickname-input" 
+          placeholder="请输入昵称"
+          value="{{userNicknameTemp}}"
+          bindchange="onNicknameChange"
+        />
+      </view>
+      
+      <!-- 确认登录按钮 -->
+      <button class="login-btn" bindtap="handleNewLogin">
+        <text class="login-btn-icon">🔐</text>
+        <text class="login-btn-text">完成登录</text>
+      </button>
+      
+      <!-- 或者使用旧方式（降级方案） -->
+      <view class="login-divider">
+        <text class="divider-text">或</text>
+      </view>
+      
+      <button class="login-btn-secondary" bindtap="handleOldLogin">
+        <text class="login-btn-text">使用getUserProfile登录</text>
+      </button>
     </view>
   </view>
 

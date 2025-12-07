@@ -12,6 +12,9 @@ Page({
     subtotal: '0.00',
     deliveryFee: '5.00',
     totalAmount: '0.00',
+    subtotalStars: 0,  // 小计爱心数
+    deliveryStars: 1,  // 配送费：1颗爱心
+    totalStars: 0,     // 总爱心数
     contactName: '',
     remarks: '',
     demoMode: true
@@ -41,32 +44,52 @@ Page({
 
   // 加载订单数据
   loadOrderData() {
+    const dishData = require('../../utils/dishData.js');
     const cartItems = cartManager.getCartItems();
     const subtotal = cartManager.getTotalPrice();
     const deliveryFee = 5.0;
     const totalAmount = subtotal + deliveryFee;
 
-    // 格式化订单项的价格
+    // 格式化订单项的价格和爱心数
     const formattedCartItems = cartItems.map(item => {
+      // 从最新的菜品数据中获取stars字段
+      const latestDish = dishData.getDishById(item.dish.id || item.dish._id);
+      const stars = latestDish ? latestDish.stars : (item.dish.stars || 0);
+      
       return {
-        dish: item.dish,
+        dish: {
+          ...item.dish,
+          stars: stars  // 更新stars字段
+        },
         quantity: item.quantity,
-        itemTotal: (item.dish.price * item.quantity).toFixed(2)
+        itemTotal: (item.dish.price * item.quantity).toFixed(2),
+        totalStars: stars * item.quantity  // 计算每项的爱心数
       };
     });
+
+    // 计算总爱心数
+    const subtotalStars = formattedCartItems.reduce((sum, item) => sum + item.totalStars, 0);
+    const deliveryStars = 1;  // 配送费：1颗爱心
+    const totalStars = subtotalStars + deliveryStars;
 
     console.log('订单数据加载完成:', {
       商品数量: formattedCartItems.length,
       小计: subtotal,
+      小计爱心: subtotalStars,
       配送费: deliveryFee,
-      总计: totalAmount
+      配送爱心: deliveryStars,
+      总计: totalAmount,
+      总爱心: totalStars
     });
 
     this.setData({
       cartItems: formattedCartItems,
       subtotal: subtotal.toFixed(2),
       deliveryFee: deliveryFee.toFixed(2),
-      totalAmount: totalAmount.toFixed(2)
+      totalAmount: totalAmount.toFixed(2),
+      subtotalStars: subtotalStars,
+      deliveryStars: deliveryStars,
+      totalStars: totalStars
     });
   },
 

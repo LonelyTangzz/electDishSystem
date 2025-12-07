@@ -1,0 +1,27 @@
+// WXS 模块：用于生成爱心字符串
+
+// 生成爱心字符串
+function getStarsText(stars) {
+  // 处理各种情况
+  if (stars === undefined || stars === null || stars === '') {
+    return '';
+  }
+  
+  // 转换为数字（处理字符串情况）
+  var num = parseInt(stars);
+  
+  if (isNaN(num) || num <= 0) {
+    return '';
+  }
+  
+  var result = '';
+  for (var i = 0; i < num; i++) {
+    result += '❤️';
+  }
+  return result;
+}
+
+module.exports = {
+  getStarsText: getStarsText
+};
+

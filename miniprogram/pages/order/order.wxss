@@ -131,11 +131,18 @@
   color: #999;
 }
 
-.item-price {
-  font-size: 28rpx;
-  font-weight: bold;
-  color: #52C41A;
+/* 爱心星级显示 */
+.item-stars {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
   flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.star-icon {
+  font-size: 24rpx;
+  line-height: 1;
 }
 
 /* 费用明细 */
@@ -160,9 +167,16 @@
   color: #666;
 }
 
-.price-value {
+/* 价格爱心显示 */
+.price-stars {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  flex-wrap: wrap;
+}
+
+.price-stars .star-icon {
   font-size: 28rpx;
-  color: #333;
 }
 
 .divider {
@@ -181,10 +195,14 @@
   color: #333;
 }
 
-.total-row .price-value.total {
+/* 合计爱心显示 */
+.price-stars.total-stars .star-icon-large {
   font-size: 40rpx;
-  font-weight: bold;
-  color: #FF4D4F;
+}
+
+.star-icon-large {
+  font-size: 40rpx;
+  line-height: 1;
 }
 
 /* 提交按钮 */

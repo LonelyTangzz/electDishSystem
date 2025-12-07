@@ -171,15 +171,22 @@
   align-items: center;
 }
 
-.dish-price {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #52C41A;
+/* 爱心星级显示 */
+.dish-stars {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
 }
 
-.dish-price::before {
-  content: '¥';
-  font-size: 24rpx;
+.stars-text {
+  font-size: 32rpx;
+  line-height: 1;
+  letter-spacing: 2rpx;
+}
+
+.star-icon {
+  font-size: 32rpx;
+  line-height: 1;
 }
 
 /* 数量控制 */

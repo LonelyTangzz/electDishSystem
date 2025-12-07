@@ -52,10 +52,25 @@ Page({
       // 格式化订单数据
       const formattedOrders = orders.map(order => {
         const createTime = new Date(order.createTime);
+        
+        // 计算订单的总爱心数
+        const totalStars = order.items.reduce((sum, item) => {
+          const dishStars = item.dish.stars || 0;
+          return sum + (dishStars * item.quantity);
+        }, 0) + 1;  // +1 是配送费的爱心
+        
+        // 为每个商品添加爱心数
+        const itemsWithStars = order.items.map(item => ({
+          ...item,
+          totalStars: (item.dish.stars || 0) * item.quantity
+        }));
+        
         return {
           ...order,
+          items: itemsWithStars,
           formattedTime: util.formatTime(createTime),
           formattedTotal: order.totalAmount.toFixed(2),
+          totalStars: totalStars,  // 总爱心数
           statusText: this.getStatusText(order.status),
           canReview: order.status === 'completed' && !order.hasReview
         };
