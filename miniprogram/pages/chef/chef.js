@@ -30,7 +30,7 @@ Page({
 
   /**
    * 检查厨师权限
-   * 情侣模式：只有配对后才能看到对方的订单
+   * 只要登录就可以看（因为只有两个人用）
    */
   async checkChefPermission() {
     try {
@@ -53,26 +53,7 @@ Page({
         isChef: true
       });
 
-      // 检查是否已配对
-      const partnerOpenid = app.globalData.partnerOpenid;
-      if (!partnerOpenid) {
-        wx.showModal({
-          title: '还未配对',
-          content: '请先在"我的"页面完成配对，\n才能看到TA的点餐哦~ 💕',
-          showCancel: false,
-          confirmText: '去配对',
-          success: (res) => {
-            if (res.confirm) {
-              wx.switchTab({ url: '/pages/mine/mine' });
-            }
-          }
-        });
-        return;
-      }
-
-      if (this.data.isChef) {
-        this.loadOrders();
-      }
+      this.loadOrders();
     } catch (error) {
       console.error('检查权限失败:', error);
       util.showToast('检查失败', 'error');
@@ -99,9 +80,9 @@ Page({
       const status = this.data.currentTab;
       const allOrders = await db.getOrdersByStatus(status);
       
-      // 只显示分配给自己的订单（forChef 字段等于自己的 openid）
+      // 只要下单人不是我，就是我要做的单（默认只有两个人用）
       const myOpenid = app.globalData.openid;
-      const orders = allOrders.filter(order => order.forChef === myOpenid);
+      const orders = allOrders.filter(order => order.openid !== myOpenid);
 
       // 格式化订单数据
       const formattedOrders = orders.map(order => {
@@ -143,15 +124,19 @@ Page({
       const allPendingOrders = await db.getOrdersByStatus('pending');
       const allCookingOrders = await db.getOrdersByStatus('cooking');
       
-      // 只统计分配给自己的订单
-      const pendingOrders = allPendingOrders.filter(order => order.forChef === myOpenid);
-      const cookingOrders = allCookingOrders.filter(order => order.forChef === myOpenid);
+      // 只要下单人不是我，就是我要做的单
+      const pendingOrders = allPendingOrders.filter(order => order.openid !== myOpenid);
+      const cookingOrders = allCookingOrders.filter(order => order.openid !== myOpenid);
       
       // 获取今日完成订单
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const allCompletedOrders = await db.getOrdersByStatusAndTime('completed', today.getTime());
-      const completedOrders = allCompletedOrders.filter(order => order.forChef === myOpenid);
+      // 这里统计的是"我完成的订单"（即我作为厨师处理的订单）
+      // 逻辑：如果是我点击了"完成"，那么 status 是 completed 且处理人是我
+      // 但简化版中，只要不是我下的单且已完成，就算是我做的（或者简单点，只看 status）
+      // 为了准确，这里暂时统计"非我下单且已完成"的
+      const completedOrders = allCompletedOrders.filter(order => order.openid !== myOpenid);
 
       this.setData({
         'stats.pending': pendingOrders.length,
