@@ -21,6 +21,8 @@ Page({
     this.loadCartData();
     // 强制更新TabBar徽标
     app.updateCartCount();
+    // 更新厨师任务徽标
+    app.updateChefBadge();
   },
 
   // 加载购物车数据

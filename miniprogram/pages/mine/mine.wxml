@@ -6,45 +6,34 @@
       <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
       <view class="user-detail">
         <text class="nickname">{{userInfo.nickName}}</text>
-        <text class="welcome">欢迎来到阿汤的小食堂</text>
+        <text class="welcome">今天也要好好吃饭哦~ 💕</text>
       </view>
     </view>
     
     <view wx:else class="login-container">
-      <!-- 头像选择 -->
-      <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-        <image class="avatar-placeholder" src="{{userAvatarTemp || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill" />
-      </button>
-      
-      <view class="login-text">
-        <text class="login-title">欢迎来到阿汤的小食堂</text>
-        <text class="login-desc">点击头像设置，输入昵称完成登录</text>
+      <view class="avatar-placeholder">
+        <text style="font-size: 60rpx;">💑</text>
       </view>
       
-      <!-- 昵称输入 -->
+      <view class="login-text">
+        <text class="login-title">阿汤的小食堂</text>
+        <text class="login-desc">专属二人世界，请输入名字进入</text>
+      </view>
+      
+      <!-- 名字输入 -->
       <view class="nickname-input-wrapper">
         <input 
-          type="nickname" 
           class="nickname-input" 
-          placeholder="请输入昵称"
-          value="{{userNicknameTemp}}"
-          bindchange="onNicknameChange"
+          placeholder="请输入你的专属名字"
+          value="{{inputName}}"
+          bindinput="onInputName"
         />
       </view>
       
       <!-- 确认登录按钮 -->
-      <button class="login-btn" bindtap="handleNewLogin">
-        <text class="login-btn-icon">🔐</text>
-        <text class="login-btn-text">完成登录</text>
-      </button>
-      
-      <!-- 或者使用旧方式（降级方案） -->
-      <view class="login-divider">
-        <text class="divider-text">或</text>
-      </view>
-      
-      <button class="login-btn-secondary" bindtap="handleOldLogin">
-        <text class="login-btn-text">使用getUserProfile登录</text>
+      <button class="login-btn" bindtap="handleNameLogin">
+        <text class="login-btn-icon">❤️</text>
+        <text class="login-btn-text">芝麻开门</text>
       </button>
     </view>
   </view>
@@ -65,6 +54,22 @@
       <text class="stats-number">{{orderStats.total}}</text>
       <text class="stats-label">全部订单</text>
     </view>
+  </view>
+
+  <!-- 厨房任务卡片 (新) -->
+  <view wx:if="{{hasUserInfo}}" class="chef-card card" bindtap="goToChef">
+    <view class="chef-info">
+      <view class="chef-header">
+        <text class="chef-icon">🍳</text>
+        <text class="chef-title">我的厨房</text>
+      </view>
+      <text class="chef-desc">查看TA点的餐</text>
+    </view>
+    <view class="chef-stat" wx:if="{{chefTaskCount > 0}}">
+      <text class="chef-count">{{chefTaskCount}}</text>
+      <text class="chef-label">待制作</text>
+    </view>
+    <view class="chef-arrow">›</view>
   </view>
 
   <!-- 功能菜单 -->

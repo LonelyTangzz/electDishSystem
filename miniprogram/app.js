@@ -38,14 +38,20 @@ App({
     
     // 初始化购物车数量
     this.updateCartCount();
+    
+    // 初始化厨师任务数量
+    this.updateChefBadge();
   },
 
   // 恢复用户信息
   restoreUserInfo() {
     try {
       const userInfo = wx.getStorageSync('userInfo');
-      if (userInfo) {
+      const openid = wx.getStorageSync('user_openid'); // 同时也恢复自定义 openid
+      
+      if (userInfo && openid) {
         this.globalData.userInfo = userInfo;
+        this.globalData.openid = openid;
         console.log('已恢复用户信息:', userInfo.nickName);
       }
     } catch (err) {
@@ -81,30 +87,51 @@ App({
     const count = cart.getItemCount();
     this.globalData.cartCount = count;
     
-    console.log('🔄 更新购物车徽标:', count);
-    
     // 更新tabBar徽标
     if (count > 0) {
       wx.setTabBarBadge({
-        index: 1,
-        text: String(count),
-        success: () => {
-          console.log('✅ TabBar徽标已设置:', count);
-        },
-        fail: (err) => {
-          console.error('❌ 设置TabBar徽标失败:', err);
-        }
-      });
+        index: 1, // 购物车是第2个Tab
+        text: String(count)
+      }).catch(err => console.log('非TabBar页面忽略Badge设置'));
     } else {
       wx.removeTabBarBadge({
-        index: 1,
-        success: () => {
-          console.log('✅ TabBar徽标已移除');
-        },
-        fail: (err) => {
-          console.error('❌ 移除TabBar徽标失败:', err);
-        }
-      });
+        index: 1
+      }).catch(err => console.log('非TabBar页面忽略Badge移除'));
+    }
+  },
+
+  /**
+   * 更新厨师任务徽标 (新)
+   * 检查有多少"非我"的待处理订单
+   */
+  async updateChefBadge() {
+    const db = require('./utils/db.js');
+    
+    // 必须有openid才能判断"非我"
+    if (!this.globalData.openid) return;
+    
+    try {
+      const allPendingOrders = await db.getOrdersByStatus('pending');
+      const myOpenid = this.globalData.openid;
+      
+      // 只要不是我下的单，就是我的任务
+      const myTasks = allPendingOrders.filter(order => order.openid !== myOpenid);
+      const count = myTasks.length;
+      
+      console.log('👨‍🍳 厨师任务数:', count);
+      
+      if (count > 0) {
+        wx.setTabBarBadge({
+          index: 2, // 厨房是第3个Tab
+          text: String(count)
+        }).catch(err => console.log('非TabBar页面忽略Badge设置'));
+      } else {
+        wx.removeTabBarBadge({
+          index: 2
+        }).catch(err => console.log('非TabBar页面忽略Badge移除'));
+      }
+    } catch (error) {
+      console.error('更新厨师徽标失败:', error);
     }
   },
 

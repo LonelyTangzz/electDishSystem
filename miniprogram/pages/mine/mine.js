@@ -10,16 +10,68 @@ Page({
   data: {
     userInfo: null,
     hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseButton: wx.canIUse('button.open-type.getUserInfo'),
-    userAvatarTemp: '',  // 临时头像
-    userNicknameTemp: '',  // 临时昵称
+    inputName: '', // 用户输入的名字
     orderStats: {
       pending: 0,
       completed: 0,
       total: 0
     },
-    demoMode: true
+    demoMode: true,
+    chefTaskCount: 0, // 待处理的厨房任务
+    inputName: '' // 输入的名字
+  },
+
+  // 输入名字
+  onInputName(e) {
+    this.setData({
+      inputName: e.detail.value
+    });
+  },
+
+  // 专属名字登录
+  handleNameLogin() {
+    const name = this.data.inputName.trim();
+    
+    // 定义合法用户
+    const validUsers = {
+      '陈小宝大笨蛋': {
+        nickName: '陈小宝大笨蛋',
+        avatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0', // 默认头像
+        openid: 'chen_xiaobao' // 模拟固定 openid
+      },
+      '汤大宝小聪明': {
+        nickName: '汤大宝小聪明',
+        avatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0', // 默认头像
+        openid: 'tang_dabao' // 模拟固定 openid
+      }
+    };
+
+    if (validUsers[name]) {
+      // 登录成功
+      const userInfo = validUsers[name];
+      
+      // 保存到全局
+      app.globalData.userInfo = userInfo;
+      app.globalData.openid = userInfo.openid;
+      
+      // 保存到本地存储
+      userManager.saveUserInfo(userInfo);
+      wx.setStorageSync('user_openid', userInfo.openid); // 额外存一个openid
+      
+      this.setData({
+        userInfo: userInfo,
+        hasUserInfo: true,
+        inputName: ''
+      });
+      
+      util.showSuccess(`欢迎回来，${name}！💕`);
+      this.loadOrderStats();
+      this.loadChefStats();
+      
+    } else {
+      // 登录失败
+      util.showError('名字不对哦！你是谁？😤');
+    }
   },
 
   onLoad() {
@@ -35,6 +87,7 @@ Page({
     
     if (this.data.hasUserInfo) {
       this.loadOrderStats();
+      this.loadChefStats();
     }
   },
 
@@ -65,111 +118,57 @@ Page({
     }
   },
 
-  // 通过按钮获取用户信息（老方式，用于兼容）
-  onGetUserInfo(e) {
-    console.log('按钮获取用户信息:', e);
-    if (e.detail.userInfo) {
-      userManager.getUserInfoByButton(e)
-        .then(userInfo => {
-          this.setData({
-            userInfo: userInfo,
-            hasUserInfo: true
-          });
-          util.showSuccess('登录成功');
-          this.loadOrderStats();
-        })
-        .catch(err => {
-          console.error('获取用户信息失败:', err);
-          util.showError('您拒绝了授权');
-        });
-    } else {
-      util.showError('您拒绝了授权');
-    }
-  },
-
-  // 获取用户信息（新方式）
-  getUserProfile() {
-    console.log('===== 开始获取用户信息 =====');
-    userManager.getUserProfile()
-      .then(userInfo => {
-        console.log('✅ 获取用户信息成功:', userInfo);
-        this.setData({
-          userInfo: userInfo,
-          hasUserInfo: true
-        });
-        util.showSuccess('登录成功');
-        this.loadOrderStats();
-      })
-      .catch(err => {
-        console.error('❌ 获取用户信息失败:', err);
-        if (err.message && err.message.includes('微信版本')) {
-          util.showError('请升级微信版本');
-        } else if (err.errMsg && err.errMsg.includes('cancel')) {
-          util.showError('您取消了授权');
-        } else {
-          util.showError('登录失败，请重试');
-        }
-      });
-  },
-
-  // 选择头像（新方式）
-  onChooseAvatar(e) {
-    console.log('✅ 用户选择了头像:', e.detail.avatarUrl);
+  // 输入名字
+  onInputName(e) {
     this.setData({
-      userAvatarTemp: e.detail.avatarUrl
+      inputName: e.detail.value
     });
   },
 
-  // 输入昵称（新方式）
-  onNicknameChange(e) {
-    console.log('✅ 用户输入了昵称:', e.detail.value);
-    this.setData({
-      userNicknameTemp: e.detail.value
-    });
-  },
-
-  // 新方式登录：使用头像昵称填写组件
-  handleNewLogin() {
-    const { userAvatarTemp, userNicknameTemp } = this.data;
+  // 专属名字登录
+  handleNameLogin() {
+    const name = this.data.inputName.trim();
     
-    if (!userNicknameTemp || userNicknameTemp.trim() === '') {
-      util.showError('请输入昵称');
-      return;
-    }
-
-    console.log('===== 使用新方式登录 =====');
-    console.log('头像:', userAvatarTemp);
-    console.log('昵称:', userNicknameTemp);
-
-    // 构建用户信息对象
-    const userInfo = {
-      nickName: userNicknameTemp,
-      avatarUrl: userAvatarTemp || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+    // 定义合法用户
+    const validUsers = {
+      '陈小宝大笨蛋': {
+        nickName: '陈小宝大笨蛋',
+        avatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0', // 默认头像
+        openid: 'chen_xiaobao' // 模拟固定 openid
+      },
+      '汤大宝小聪明': {
+        nickName: '汤大宝小聪明',
+        avatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0', // 默认头像
+        openid: 'tang_dabao' // 模拟固定 openid
+      }
     };
 
-    // 保存用户信息
-    userManager.saveUserInfo(userInfo);
-
-    this.setData({
-      userInfo: userInfo,
-      hasUserInfo: true,
-      userAvatarTemp: '',
-      userNicknameTemp: ''
-    });
-
-    util.showSuccess('登录成功');
-    this.loadOrderStats();
-  },
-
-  // 旧方式登录：使用getUserProfile
-  handleOldLogin() {
-    this.getUserProfile();
-  },
-
-  // 点击登录按钮（兼容旧代码）
-  handleLogin() {
-    // 优先使用新方式
-    this.handleNewLogin();
+    if (validUsers[name]) {
+      // 登录成功
+      const userInfo = validUsers[name];
+      
+      // 保存到全局
+      app.globalData.userInfo = userInfo;
+      app.globalData.openid = userInfo.openid;
+      
+      // 保存到本地存储
+      userManager.saveUserInfo(userInfo);
+      wx.setStorageSync('user_openid', userInfo.openid); // 额外存一个openid
+      
+      this.setData({
+        userInfo: userInfo,
+        hasUserInfo: true,
+        inputName: ''
+      });
+      
+      util.showSuccess(`欢迎回来，${name}！💕`);
+      this.loadOrderStats();
+      this.loadChefStats();
+      
+    } else {
+      // 登录失败
+      util.showError('名字不对哦！你是谁？😤');
+    }
   },
 
   // 加载订单统计
@@ -208,6 +207,35 @@ Page({
     }
   },
 
+  // 加载厨房任务统计
+  async loadChefStats() {
+    if (!app.globalData.openid) return;
+    
+    try {
+      const allPendingOrders = await db.getOrdersByStatus('pending');
+      const myOpenid = app.globalData.openid;
+      
+      // 只要不是我下的单，就是我的任务
+      const myTasks = allPendingOrders.filter(order => order.openid !== myOpenid);
+      
+      this.setData({
+        chefTaskCount: myTasks.length
+      });
+      
+      // 更新 TabBar Badge
+      app.updateChefBadge();
+    } catch (err) {
+      console.error('加载厨房统计失败', err);
+    }
+  },
+
+  // 跳转到厨房
+  goToChef() {
+    wx.switchTab({
+      url: '/pages/chef/chef'
+    });
+  },
+
   // 查看订单
   goToOrders(e) {
     const status = e.currentTarget.dataset.status || '';
@@ -240,14 +268,17 @@ Page({
             pending: 0,
             completed: 0,
             total: 0
-          }
+          },
+          chefTaskCount: 0
         });
         
         // 清除全局数据
-        app.setUserInfo(null);
+        app.globalData.userInfo = null;
+        app.globalData.openid = null;
         
-        // 调用 userManager 的 logout 方法，清除所有缓存
+        // 清除所有缓存
         userManager.logout();
+        wx.removeStorageSync('user_openid');
         
         util.showSuccess('已退出登录');
       }

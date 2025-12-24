@@ -145,23 +145,31 @@ Page({
     util.showLoading('提交中...');
 
     try {
-      // 获取配对的伴侣 openid
-      const partnerOpenid = app.globalData.partnerOpenid || '';
+      const userManager = require('../../utils/userManager.js');
+      const myId = app.globalData.openid;
       
+      // 自动寻找对方ID
+      let partnerId = '';
+      if (myId === 'chen_xiaobao') {
+        partnerId = 'tang_dabao';
+      } else if (myId === 'tang_dabao') {
+        partnerId = 'chen_xiaobao';
+      }
+
       // 创建订单数据
       const orderData = {
-        openid: app.globalData.openid,
+        openid: myId,
         contactName: contactName.trim(),
         items: cartItems,
         totalAmount: parseFloat(totalAmount),
         remarks: remarks || '',
         status: 'pending',
         hasReview: false,
-        forChef: partnerOpenid  // 分配给配对的另一方
+        forChef: partnerId // 明确指派给对方
       };
 
       console.log('订单数据:', orderData);
-      console.log('订单将分配给:', partnerOpenid || '（未配对）');
+      console.log('指向大厨:', partnerId || '未知');
 
       let result;
       
@@ -206,19 +214,16 @@ Page({
     
     wx.showModal({
       title: '🎉 订单提交成功',
-      content: `订单号：${shortId}\n联系人：${this.data.contactName}\n订单状态：待确认\n预计 30 分钟送达${demoTip}`,
+      content: `订单号：${shortId}\n联系人：${this.data.contactName}\n状态：等待TA接单 💕\n\n快去告诉TA："我饿啦~"`,
       showCancel: false,
-      confirmText: '返回首页',
+      confirmText: '查看进度',
       success: (res) => {
         if (res.confirm) {
-          // 返回首页
+          // 跳转到订单列表页
           wx.switchTab({
-            url: '/pages/index/index',
+            url: '/pages/orders/orders',
             success: () => {
-              console.log('✅ 已返回首页');
-              setTimeout(() => {
-                util.showSuccess('订单已提交，配送员正在赶来！', 2000);
-              }, 500);
+              util.showSuccess('已通知大厨！', 2000);
             }
           });
         }

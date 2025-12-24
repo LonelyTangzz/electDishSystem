@@ -1,8 +1,61 @@
 // 用户管理工具类
 
+// 预设用户白名单
+const VIP_USERS = [
+  {
+    name: '陈小宝大笨蛋',
+    id: 'chen_xiaobao',
+    avatar: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0' // 默认可爱头像
+  },
+  {
+    name: '汤大宝小聪明',
+    id: 'tang_dabao',
+    avatar: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0' // 默认可爱头像
+  }
+];
+
+/**
+ * 验证名字并登录
+ * @param {string} inputName - 用户输入的名字
+ */
+function verifyAndLogin(inputName) {
+  return new Promise((resolve, reject) => {
+    const user = VIP_USERS.find(u => u.name === inputName.trim());
+    
+    if (user) {
+      // 登录成功
+      const userInfo = {
+        nickName: user.name,
+        avatarUrl: user.avatar,
+        id: user.id
+      };
+      
+      const app = getApp();
+      
+      // 设置 OpenID 为固定的 ID (不用微信的 openid 了)
+      if (app && app.globalData) {
+        app.globalData.openid = user.id;
+        app.globalData.userInfo = userInfo;
+        
+        // 标记为 Demo 模式（因为不再依赖云开发鉴权）
+        app.globalData.demoMode = true; 
+      }
+      
+      saveUserInfo(userInfo);
+      
+      resolve({
+        success: true,
+        userInfo: userInfo
+      });
+    } else {
+      reject(new Error('名字不对哦，是不是输错了？'));
+    }
+  });
+}
+
 /**
  * 微信登录 - 获取OpenID
- * @param {boolean} showLoading - 是否显示加载提示，默认false（静默登录）
+ * (已弃用，保留兼容性但不再调用)
  */
 function wxLogin(showLoading = false) {
   return new Promise((resolve, reject) => {
@@ -309,6 +362,8 @@ async function fullLogin() {
 }
 
 module.exports = {
+  verifyAndLogin,
+  VIP_USERS,
   wxLogin,
   getUserInfoByButton,
   getUserProfile,

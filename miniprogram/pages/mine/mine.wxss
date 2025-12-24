@@ -231,160 +231,68 @@
   box-shadow: 0 4rpx 12rpx rgba(250, 173, 20, 0.15);
 }
 
-/* ==================== 配对卡片样式 ==================== */
-
-.couple-card {
+/* 厨房任务卡片 (新) */
+.chef-card {
   margin-bottom: 20rpx;
-  padding: 40rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: linear-gradient(135deg, #FFF0F6 0%, #FFE7E7 100%);
   border: 2rpx solid #FFADD2;
 }
 
-.couple-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 30rpx;
-}
-
-.couple-icon {
-  font-size: 48rpx;
-  margin-right: 15rpx;
-}
-
-.couple-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #C41D7F;
-}
-
-/* 已配对状态 */
-.couple-paired {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30rpx;
-  background: white;
-  border-radius: 16rpx;
-}
-
-.paired-info {
+.chef-info {
   display: flex;
   flex-direction: column;
 }
 
-.paired-label {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #F759AB;
-  margin-bottom: 10rpx;
+.chef-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
 }
 
-.paired-desc {
+.chef-icon {
+  font-size: 36rpx;
+  margin-right: 12rpx;
+}
+
+.chef-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #C41D7F;
+}
+
+.chef-desc {
   font-size: 24rpx;
   color: #FF85C0;
 }
 
-.btn-unpair {
-  padding: 15rpx 30rpx;
-  background: #FFF;
-  border: 2rpx solid #FFADD2;
-  border-radius: 50rpx;
-  font-size: 24rpx;
-  color: #C41D7F;
-}
-
-.btn-unpair::after {
-  border: none;
-}
-
-/* 未配对状态 */
-.couple-unpaired {
+.chef-stat {
   display: flex;
   flex-direction: column;
-  gap: 30rpx;
-}
-
-.my-openid {
-  display: flex;
-  flex-direction: column;
-  padding: 25rpx;
-  background: white;
-  border-radius: 16rpx;
-}
-
-.openid-label {
-  font-size: 26rpx;
-  color: #C41D7F;
-  margin-bottom: 15rpx;
-  font-weight: bold;
-}
-
-.openid-box {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20rpx;
-  background: #F0F0F0;
-  border-radius: 12rpx;
-  margin-bottom: 10rpx;
-}
-
-.openid-text {
-  font-size: 22rpx;
-  color: #666;
-  font-family: 'Courier New', monospace;
-  word-break: break-all;
-  flex: 1;
-}
-
-.copy-icon {
-  font-size: 32rpx;
-  margin-left: 15rpx;
-}
-
-.openid-tip {
-  font-size: 22rpx;
-  color: #999;
-  text-align: center;
-}
-
-.input-partner {
-  display: flex;
-  flex-direction: column;
-  padding: 25rpx;
   background: white;
-  border-radius: 16rpx;
-}
-
-.input-label {
-  font-size: 26rpx;
-  color: #C41D7F;
-  margin-bottom: 15rpx;
-  font-weight: bold;
-}
-
-.partner-input {
-  width: 100%;
-  padding: 20rpx;
-  background: #F0F0F0;
+  padding: 10rpx 20rpx;
   border-radius: 12rpx;
-  font-size: 24rpx;
-  margin-bottom: 20rpx;
 }
 
-.btn-pair {
-  width: 100%;
-  height: 88rpx;
-  background: linear-gradient(135deg, #FF85C0 0%, #F759AB 100%);
-  color: white;
-  border-radius: 44rpx;
+.chef-count {
   font-size: 32rpx;
   font-weight: bold;
-  border: none;
-  box-shadow: 0 8rpx 20rpx rgba(247, 89, 171, 0.3);
+  color: #C41D7F;
 }
 
-.btn-pair::after {
-  border: none;
+.chef-label {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.chef-arrow {
+  font-size: 40rpx;
+  color: #FFADD2;
+  font-weight: 300;
+  margin-left: 10rpx;
 }
 

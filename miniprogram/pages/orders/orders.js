@@ -96,11 +96,9 @@ Page({
   // 获取状态文字
   getStatusText(status) {
     const statusMap = {
-      'pending': '待确认',
-      'confirmed': '已确认',
-      'preparing': '准备中',
-      'delivering': '配送中',
-      'completed': '已完成',
+      'pending': '等待TA接单 💕',
+      'cooking': 'TA正在做 🍳',
+      'completed': '已做好了 😋',
       'cancelled': '已取消'
     };
     return statusMap[status] || status;

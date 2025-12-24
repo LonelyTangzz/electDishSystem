@@ -53,6 +53,8 @@ Page({
     this.updateCartBadges();
     // 强制更新TabBar徽标
     app.updateCartCount();
+    // 更新厨师任务徽标
+    app.updateChefBadge();
   },
 
   // 从本地加载菜品（Demo模式）

@@ -26,6 +26,8 @@ Page({
     if (this.data.isChef) {
       this.loadOrders();
     }
+    // 更新厨师任务徽标
+    app.updateChefBadge();
   },
 
   /**
@@ -80,9 +82,10 @@ Page({
       const status = this.data.currentTab;
       const allOrders = await db.getOrdersByStatus(status);
       
-      // 只要下单人不是我，就是我要做的单（默认只有两个人用）
       const myOpenid = app.globalData.openid;
-      const orders = allOrders.filter(order => order.openid !== myOpenid);
+      
+      // 精准过滤：只显示指派给我的订单
+      const orders = allOrders.filter(order => order.forChef === myOpenid);
 
       // 格式化订单数据
       const formattedOrders = orders.map(order => {
@@ -124,19 +127,16 @@ Page({
       const allPendingOrders = await db.getOrdersByStatus('pending');
       const allCookingOrders = await db.getOrdersByStatus('cooking');
       
-      // 只要下单人不是我，就是我要做的单
-      const pendingOrders = allPendingOrders.filter(order => order.openid !== myOpenid);
-      const cookingOrders = allCookingOrders.filter(order => order.openid !== myOpenid);
+      // 精准统计：只统计指派给我的
+      const pendingOrders = allPendingOrders.filter(order => order.forChef === myOpenid);
+      const cookingOrders = allCookingOrders.filter(order => order.forChef === myOpenid);
       
       // 获取今日完成订单
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const allCompletedOrders = await db.getOrdersByStatusAndTime('completed', today.getTime());
-      // 这里统计的是"我完成的订单"（即我作为厨师处理的订单）
-      // 逻辑：如果是我点击了"完成"，那么 status 是 completed 且处理人是我
-      // 但简化版中，只要不是我下的单且已完成，就算是我做的（或者简单点，只看 status）
-      // 为了准确，这里暂时统计"非我下单且已完成"的
-      const completedOrders = allCompletedOrders.filter(order => order.openid !== myOpenid);
+      
+      const completedOrders = allCompletedOrders.filter(order => order.forChef === myOpenid);
 
       this.setData({
         'stats.pending': pendingOrders.length,
