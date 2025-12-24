@@ -118,6 +118,7 @@ const OrderDB = {
       
       const res = await query
         .orderBy('createTime', 'desc')
+        .limit(20) // 限制每次只拉取20条，减少卡顿
         .get();
       return res.data;
     } catch (err) {
@@ -168,7 +169,7 @@ const OrderDB = {
       const res = await db.collection('orders')
         .where({ status: status })
         .orderBy('createTime', 'desc')
-        .limit(100)
+        .limit(20) // 限制数量，防止全表扫描过慢
         .get();
       return res.data;
     } catch (err) {

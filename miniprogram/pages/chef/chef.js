@@ -58,7 +58,7 @@ Page({
       this.loadOrders();
     } catch (error) {
       console.error('检查权限失败:', error);
-      util.showToast('检查失败', 'error');
+      util.showError('检查失败'); // 修复 showToast 调用
     }
   },
 
@@ -84,8 +84,8 @@ Page({
       
       const myOpenid = app.globalData.openid;
       
-      // 精准过滤：只显示指派给我的订单
-      const orders = allOrders.filter(order => order.forChef === myOpenid);
+      // 精准过滤：只要不是我下的单，就是我的任务
+      const orders = allOrders.filter(order => order.openid !== myOpenid);
 
       // 格式化订单数据
       const formattedOrders = orders.map(order => {
@@ -95,12 +95,23 @@ Page({
           completedTimeFormatted: order.completedTime ? this.formatTime(order.completedTime) : '',
           statusText: this.getStatusText(order.status),
           // 为每个菜品添加 emoji
-          items: order.items.map(item => ({
-            ...item,
-            emoji: this.getDishEmoji(item.name),
-            subtotal: item.subtotal.toFixed(2)
-          })),
-          totalAmount: order.totalAmount.toFixed(2)
+          items: order.items.map(item => {
+            // 兼容不同的数据结构：item 本身可能是 dish，或者 item.dish 才是
+            const dishName = item.name || (item.dish && item.dish.name) || '未知菜品';
+            const dishPrice = item.price || (item.dish && item.dish.price) || 0;
+            const quantity = item.quantity || 1;
+            const subtotal = item.subtotal || (dishPrice * quantity) || 0;
+            
+            return {
+              ...item,
+              name: dishName, // 确保有 name 字段用于显示
+              price: dishPrice, // 确保有 price 字段
+              quantity: quantity,
+              emoji: this.getDishEmoji(dishName),
+              subtotal: parseFloat(subtotal).toFixed(2)
+            };
+          }),
+          totalAmount: (order.totalAmount || 0).toFixed(2)
         };
       });
 
@@ -113,7 +124,7 @@ Page({
     } catch (error) {
       console.error('加载订单失败:', error);
       wx.hideLoading();
-      util.showToast('加载订单失败', 'error');
+      util.showError('加载订单失败'); // 修复 showToast 调用错误
     }
   },
 
@@ -127,16 +138,15 @@ Page({
       const allPendingOrders = await db.getOrdersByStatus('pending');
       const allCookingOrders = await db.getOrdersByStatus('cooking');
       
-      // 精准统计：只统计指派给我的
-      const pendingOrders = allPendingOrders.filter(order => order.forChef === myOpenid);
-      const cookingOrders = allCookingOrders.filter(order => order.forChef === myOpenid);
+      // 精准统计：只要不是我下的单，就是我的任务
+      const pendingOrders = allPendingOrders.filter(order => order.openid !== myOpenid);
+      const cookingOrders = allCookingOrders.filter(order => order.openid !== myOpenid);
       
-      // 获取今日完成订单
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const allCompletedOrders = await db.getOrdersByStatusAndTime('completed', today.getTime());
+      // 获取历史完成订单（移除日期限制，显示所有）
+      const allCompletedOrders = await db.getOrdersByStatus('completed');
       
-      const completedOrders = allCompletedOrders.filter(order => order.forChef === myOpenid);
+      // 这里的逻辑：如果是我完成的（作为厨师），那么下单人肯定不是我
+      const completedOrders = allCompletedOrders.filter(order => order.openid !== myOpenid);
 
       this.setData({
         'stats.pending': pendingOrders.length,
@@ -160,14 +170,14 @@ Page({
       await db.updateOrderStatus(orderId, 'cooking');
 
       wx.hideLoading();
-      util.showToast('开始做啦~ 💪', 'success');
+      util.showSuccess('开始做啦~ 💪'); // 修复 showToast 调用
       
       // 刷新订单列表
       this.loadOrders();
     } catch (error) {
       console.error('操作失败:', error);
       wx.hideLoading();
-      util.showToast('操作失败', 'error');
+      util.showError('操作失败'); // 修复 showToast 调用
     }
   },
 
@@ -191,14 +201,14 @@ Page({
       await db.updateOrderStatus(orderId, 'cancelled');
 
       wx.hideLoading();
-      util.showToast('订单已拒绝', 'success');
+      util.showSuccess('订单已拒绝'); // 修复 showToast 调用
       
       // 刷新订单列表
       this.loadOrders();
     } catch (error) {
       console.error('拒单失败:', error);
       wx.hideLoading();
-      util.showToast('拒单失败', 'error');
+      util.showError('拒单失败'); // 修复 showToast 调用
     }
   },
 
@@ -214,14 +224,14 @@ Page({
       await db.updateOrderStatus(orderId, 'completed', Date.now());
 
       wx.hideLoading();
-      util.showToast('做好了！快叫TA来吃吧~ 😋', 'success');
+      util.showSuccess('做好了！快叫TA来吃吧~ 😋'); // 修复 showToast 调用
       
       // 刷新订单列表
       this.loadOrders();
     } catch (error) {
       console.error('操作失败:', error);
       wx.hideLoading();
-      util.showToast('操作失败', 'error');
+      util.showError('操作失败'); // 修复 showToast 调用
     }
   },
 
@@ -234,7 +244,7 @@ Page({
     query.select('.refresh-icon').node();
     
     this.loadOrders();
-    util.showToast('已刷新', 'success');
+    util.showSuccess('已刷新'); // 修复 showToast 调用
   },
 
   /**

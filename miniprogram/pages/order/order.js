@@ -145,31 +145,18 @@ Page({
     util.showLoading('提交中...');
 
     try {
-      const userManager = require('../../utils/userManager.js');
-      const myId = app.globalData.openid;
-      
-      // 自动寻找对方ID
-      let partnerId = '';
-      if (myId === 'chen_xiaobao') {
-        partnerId = 'tang_dabao';
-      } else if (myId === 'tang_dabao') {
-        partnerId = 'chen_xiaobao';
-      }
-
       // 创建订单数据
       const orderData = {
-        openid: myId,
+        openid: app.globalData.openid,
         contactName: contactName.trim(),
         items: cartItems,
         totalAmount: parseFloat(totalAmount),
         remarks: remarks || '',
         status: 'pending',
-        hasReview: false,
-        forChef: partnerId // 明确指派给对方
+        hasReview: false
       };
 
       console.log('订单数据:', orderData);
-      console.log('指向大厨:', partnerId || '未知');
 
       let result;
       
@@ -211,6 +198,9 @@ Page({
     
     // 更新全局购物车计数
     app.updateCartCount();
+    
+    // 强制移除购物车红点（防止 updateCartCount 有延迟）
+    wx.removeTabBarBadge({ index: 1 }).catch(() => {});
     
     wx.showModal({
       title: '🎉 订单提交成功',

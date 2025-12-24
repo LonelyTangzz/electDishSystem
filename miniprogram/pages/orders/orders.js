@@ -21,6 +21,11 @@ Page({
   },
 
   onShow() {
+    // 检查是否有临时跳转状态
+    if (app.globalData.tempOrderTab) {
+      this.setData({ currentTab: app.globalData.tempOrderTab });
+      app.globalData.tempOrderTab = null; // 清除
+    }
     this.checkLoginAndLoad();
   },
 

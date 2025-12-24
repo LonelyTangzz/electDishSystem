@@ -114,20 +114,20 @@ App({
       const allPendingOrders = await db.getOrdersByStatus('pending');
       const myOpenid = this.globalData.openid;
       
-      // 只要不是我下的单，就是我的任务
-      const myTasks = allPendingOrders.filter(order => order.openid !== myOpenid);
+      // 只要不是我下的单，就是我的任务 (且必须有有效openid)
+      const myTasks = allPendingOrders.filter(order => order.openid && order.openid !== myOpenid);
       const count = myTasks.length;
       
       console.log('👨‍🍳 厨师任务数:', count);
       
       if (count > 0) {
         wx.setTabBarBadge({
-          index: 2, // 厨房是第3个Tab
+          index: 3, // 厨房是第4个Tab (index从0开始: 0点餐, 1购物车, 2订单, 3厨房)
           text: String(count)
         }).catch(err => console.log('非TabBar页面忽略Badge设置'));
       } else {
         wx.removeTabBarBadge({
-          index: 2
+          index: 3
         }).catch(err => console.log('非TabBar页面忽略Badge移除'));
       }
     } catch (error) {

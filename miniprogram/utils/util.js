@@ -15,6 +15,15 @@ const formatNumber = n => {
   return n[1] ? n : `0${n}`;
 };
 
+// 显示通用提示
+const showToast = (title, icon = 'none', duration = 1500) => {
+  wx.showToast({
+    title: title,
+    icon: icon,
+    duration: duration
+  });
+};
+
 // 显示成功提示
 const showSuccess = (title, duration = 1500) => {
   wx.showToast({
@@ -101,6 +110,7 @@ const getOrderStatusColor = (status) => {
 
 module.exports = {
   formatTime,
+  showToast,
   showSuccess,
   showError,
   showLoading,

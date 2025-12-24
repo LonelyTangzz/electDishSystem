@@ -188,11 +188,13 @@ Page({
         orders = await db.OrderDB.getUserOrders(app.globalData.openid);
       }
       
+      // 消费端统计：我下的单
+      // 待完成 = 我下的 && (状态是 pending / confirmed / preparing / delivering / cooking)
       const pending = orders.filter(o => 
-        o.status === 'pending' || 
-        o.status === 'confirmed' || 
-        o.status === 'preparing'
+        ['pending', 'confirmed', 'preparing', 'delivering', 'cooking'].includes(o.status)
       ).length;
+      
+      // 已完成 = 我下的 && 状态是 completed
       const completed = orders.filter(o => o.status === 'completed').length;
       
       this.setData({
@@ -215,8 +217,8 @@ Page({
       const allPendingOrders = await db.getOrdersByStatus('pending');
       const myOpenid = app.globalData.openid;
       
-      // 只要不是我下的单，就是我的任务
-      const myTasks = allPendingOrders.filter(order => order.openid !== myOpenid);
+      // 只要不是我下的单，就是我的任务 (且必须有有效openid)
+      const myTasks = allPendingOrders.filter(order => order.openid && order.openid !== myOpenid);
       
       this.setData({
         chefTaskCount: myTasks.length
@@ -238,11 +240,16 @@ Page({
 
   // 查看订单
   goToOrders(e) {
-    const status = e.currentTarget.dataset.status || '';
+    const status = e.currentTarget.dataset.status || 'all'; // 默认为 all
     if (!this.data.hasUserInfo) {
       util.showError('请先登录');
       return;
     }
+    
+    // 如果是"已完成"，传递状态参数以便列表页自动切换Tab
+    // 注意：需要在 orders.js 里处理 onLoad 参数
+    app.globalData.tempOrderTab = status; // 临时存全局，简单粗暴
+    
     wx.switchTab({
       url: '/pages/orders/orders'
     });
