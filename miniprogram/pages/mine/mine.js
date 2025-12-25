@@ -182,6 +182,41 @@ Page({
       
       if (app.globalData.demoMode) {
         // Demo模式：从本地存储获取
+        
+        // [自动修复] 检查是否有"无主"订单（旧版本数据），自动归属给当前用户
+        // 这样可以找回用户在登录系统完善前下的单
+        const allOrders = demoStorage.DemoOrderStorage.getAllOrders();
+        let hasFix = false;
+        const currentOpenid = app.globalData.openid;
+        // 已知有效用户列表 (防止误抢别人的单)
+        const validOpenids = ['chen_xiaobao', 'tang_dabao', currentOpenid];
+        
+        console.log('[Mine] 检查订单归属:', {
+           current: currentOpenid,
+           total: allOrders.length
+        });
+
+        allOrders.forEach(order => {
+          // 如果订单没有openid，或者openid不是已知有效用户之一
+          // 并且这个订单看起来不是"已完成"的（防止抢了别人的历史订单），或者根据某种策略
+          // 这里简化策略：只要是不认识的ID，都归属给当前登录者（假设只有两人在用同一台手机测试）
+          if (!order.openid || !validOpenids.includes(order.openid)) {
+            console.log('自动修复无主订单:', order._id, '原归属:', order.openid, '-> 新归属:', currentOpenid);
+            order.openid = currentOpenid;
+            hasFix = true;
+          }
+        });
+        
+        if (hasFix) {
+           wx.setStorageSync('demo_orders', allOrders);
+           // 提示用户找回了数据
+           console.log('已自动找回历史订单');
+           // 延迟一下提示，避免和登录成功提示冲突
+           setTimeout(() => {
+             util.showToast('已找回历史订单~');
+           }, 1500);
+        }
+
         orders = demoStorage.DemoOrderStorage.getUserOrders(app.globalData.openid);
       } else {
         // 云开发模式
@@ -197,6 +232,8 @@ Page({
       // 已完成 = 我下的 && 状态是 completed
       const completed = orders.filter(o => o.status === 'completed').length;
       
+      console.log('[Mine] 统计结果:', { pending, completed, total: orders.length });
+
       this.setData({
         orderStats: {
           pending: pending,

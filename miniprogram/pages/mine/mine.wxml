@@ -63,7 +63,7 @@
         <text class="chef-icon">🍳</text>
         <text class="chef-title">我的厨房</text>
       </view>
-      <text class="chef-desc">查看TA点的餐</text>
+      <text class="chef-desc">待制作 (来自TA的订单)</text>
     </view>
     <view class="chef-stat" wx:if="{{chefTaskCount > 0}}">
       <text class="chef-count">{{chefTaskCount}}</text>

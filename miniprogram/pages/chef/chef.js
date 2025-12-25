@@ -80,12 +80,28 @@ Page({
 
       // 根据当前标签加载不同状态的订单
       const status = this.data.currentTab;
+      
+      // 注意：db.getOrdersByStatus 会返回所有该状态的订单
       const allOrders = await db.getOrdersByStatus(status);
       
       const myOpenid = app.globalData.openid;
       
-      // 精准过滤：只要不是我下的单，就是我的任务
-      const orders = allOrders.filter(order => order.openid !== myOpenid);
+      // 调试日志
+      console.log(`[Chef] 加载 ${status} 订单，共 ${allOrders.length} 条`);
+      allOrders.forEach(o => console.log(` - ID:${o._id.substring(0,8)} User:${o.openid} My:${myOpenid}`));
+      
+      // 精准过滤：
+      // 1. 厨房只显示"别人"下的单（我的任务）
+      // 2. 必须排除我自己的单（我不能做自己的单）
+      // 3. 必须排除无主订单（没有openid的），或者把无主订单视为公共任务（暂定策略：显示出来，方便找回）
+      const orders = allOrders.filter(order => {
+        // 如果没有openid，默认显示（可能是旧数据），等待被认领
+        if (!order.openid) return true;
+        // 如果是我的openid，过滤掉（这是我吃的，不是我做的）
+        return order.openid !== myOpenid;
+      });
+
+      console.log(`[Chef] 过滤后显示 ${orders.length} 条任务`);
 
       // 格式化订单数据
       const formattedOrders = orders.map(order => {
